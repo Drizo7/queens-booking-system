@@ -1,0 +1,33 @@
+{
+  "name": "queens-booking",
+  "version": "1.0.0",
+  "description": "Queens - Queen Elizabeth Booking System",
+  "main": "electron/main.js",
+  "scripts": {
+    "start": "cross-env NODE_ENV=development electron .",
+    "start:react": "cd frontend && npm start",
+    "build": "cd frontend && npm run build",
+    "package": "npm run build && electron-builder build",
+    "make": "npm run build && electron-forge make"
+  },
+  "keywords": [],
+  "author": "Adrian",
+  "license": "ISC",
+  "devDependencies": {
+    "@electron-forge/cli": "^7.4.0",
+    "@electron-forge/maker-deb": "^7.4.0",
+    "@electron-forge/maker-rpm": "^7.4.0",
+    "@electron-forge/maker-squirrel": "^7.4.0",
+    "@electron-forge/maker-zip": "^7.4.0",
+    "@electron-forge/plugin-auto-unpack-natives": "^7.4.0",
+    "@electron-forge/plugin-fuses": "^7.4.0",
+    "@electron/fuses": "^1.8.0",
+    "concurrently": "^8.2.2",
+    "cross-env": "^7.0.3",
+    "electron": "^32.0.1",
+    "wait-on": "^8.0.0"
+  },
+  "dependencies": {
+    "electron-squirrel-startup": "^1.0.1"
+  }
+}
