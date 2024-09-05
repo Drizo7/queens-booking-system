@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-
 # Queen Elizabeth Booking System - Queens
 
 ![Electron Badge](https://img.shields.io/badge/Electron-v22-blue)
@@ -30,12 +28,12 @@ To set up the project locally, follow these steps:
 
 1. **Clone the repository:**
 ```bash
-git clone https://github.com/Drizo7/queens-booking.git
+git clone https://github.com/Drizo7/queens-booking-system.git
 ```
 
 2. **Navigate to the root folder:**
 ```bash
-cd queens-booking
+cd queens-booking-system
 ```
 
 3. **Install root project dependencies:**
@@ -83,7 +81,5 @@ Becoming a maintainer
 ## License
 
 By contributing, you agree that your contributions will be licensed under MIT License.
-=======
-# queens-booking
-Queen Elizabeth Central Hospital Booking System
->>>>>>> 2ac2dbb55293aa9d2105bc63890c134f525e94fe
+
+
