@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { MenuSelect } from '../components/Form';
 import { TbUser } from 'react-icons/tb';
 import { AiOutlinePoweroff } from 'react-icons/ai';
@@ -7,9 +7,33 @@ import NotificationComp from '../components/NotificationComp';
 import { useNavigate } from 'react-router-dom';
 import { BiMenu } from 'react-icons/bi';
 import MenuDrawer from '../components/Drawer/MenuDrawer';
+import axios from 'axios';
 
 function Header() {
   const [isOpen, setIsOpen] = React.useState(false);
+
+  const [userData, setUserData] = useState({
+    first_name: '',
+    last_name: '',
+  });
+
+  // Fetch user data on component mount
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/api/profile', {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`, // Ensure token is passed in headers
+          },
+        });
+        setUserData(response.data);
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
 
   // toggle drawer
   const toggleDrawer = () => {
@@ -73,7 +97,7 @@ function Header() {
                     alt="user"
                     className="w-12 border border-border object-cover h-12 rounded-full"
                   />
-                  <p className="text-sm text-textGray font-medium">Dr. Bukayo</p>
+                  <p className="text-sm text-textGray font-medium">{`${userData.first_name} ${userData.last_name}`}</p>
                 </div>
               </MenuSelect>
             </div>

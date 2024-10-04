@@ -1,12 +1,38 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Layout from '../Layout';
 import { BiUserPlus } from 'react-icons/bi';
 import { RiLockPasswordLine } from 'react-icons/ri';
 import PersonalInfo from '../components/UsedComp/PersonalInfo';
 import ChangePassword from '../components/UsedComp/ChangePassword';
+import axios from 'axios';
 
 function Settings() {
   const [activeTab, setActiveTab] = React.useState(1);
+  const [userData, setUserData] = useState({
+    first_name: '',
+    last_name: '',
+    email: '',
+    phone_number: ''
+  });
+
+  // Fetch user data on component mount
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/api/profile', {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`, // Ensure token is passed in headers
+          },
+        });
+        setUserData(response.data);
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
   const tabs = [
     {
       id: 1,
@@ -23,7 +49,7 @@ function Settings() {
   const tabPanel = () => {
     switch (activeTab) {
       case 1:
-        return <PersonalInfo titles={true} />;
+        return <PersonalInfo titles={true} userData={userData} />;
       case 2:
         return <ChangePassword />;
       default:
@@ -48,9 +74,9 @@ function Settings() {
             className="w-40 h-40 rounded-full object-cover border border-dashed border-subMain"
           />
           <div className="gap-2 flex-colo">
-            <h2 className="text-sm font-semibold">Dr. Bukayo Saka</h2>
-            <p className="text-xs text-textGray">bukayosaka@gmail.com</p>
-            <p className="text-xs">+265 999 345 678</p>
+            <h2 className="text-sm font-semibold">{`${userData.first_name} ${userData.last_name}`}</h2>
+            <p className="text-xs text-textGray">{userData.email}</p>
+            <p className="text-xs">{userData.phone_number}</p>
           </div>
           {/* tabs */}
           <div className="flex-colo gap-3 px-2 xl:px-12 w-full">

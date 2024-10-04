@@ -27,6 +27,7 @@ import Receptions from './screens/Receptions';
 import NewMedicalRecode from './screens/Patients/NewMedicalRecode';
 import NotFound from './screens/NotFound';
 import Login from './screens/Login';
+import Register from './screens/Register';
 
 function App() {
   Aos.init();
@@ -60,6 +61,7 @@ function App() {
           <Route path="/receptions" element={<Receptions />} />
           {/* others */}
           <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
           <Route path="/appointments" element={<Appointments />} />
           <Route path="/campaigns" element={<Campaings />} />
           <Route path="/medicine" element={<Medicine />} />

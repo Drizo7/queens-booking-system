@@ -1,0 +1,10 @@
+{
+  "development": {
+    "dialect": "sqlite",
+    "storage": "./database/hospital.db"
+  },
+  "production": {
+    "dialect": "sqlite",
+    "storage": "./database/hospital.db"
+  }
+}
