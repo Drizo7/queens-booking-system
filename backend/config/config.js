@@ -1,10 +1,7 @@
-// backend/config/config.js
 const { Sequelize } = require('sequelize');
+const config = require('./config.json')[process.env.NODE_ENV || 'development'];
 
-// Database configuration
-const sequelize = new Sequelize({
-  dialect: 'sqlite',
-  storage: './database/hospital.db', // Adjust the path as necessary
-});
+// Initialize Sequelize using the selected environment config
+const sequelize = new Sequelize(config);
 
 module.exports = sequelize;
