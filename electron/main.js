@@ -7,7 +7,7 @@ const net = require('net');
 let mainWindow;
 let reactProcess;
 
-function createWindow(startUrl) {
+function createWindow(preloadUrl, reactUrl) { 
   console.log('Creating window...');
   mainWindow = new BrowserWindow({
     width: 800,
@@ -19,15 +19,19 @@ function createWindow(startUrl) {
     },
   });
 
-  console.log('Loading URL:', startUrl);
-  mainWindow.loadURL(startUrl);
+  console.log('Loading preload URL:', preloadUrl);
+  mainWindow.loadFile(preloadUrl);
 
-  mainWindow.webContents.on('did-start-loading', () => {
-    console.log('Started loading content');
-  });
-
+  // Only listen for did-finish-load once
   mainWindow.webContents.on('did-finish-load', () => {
-    console.log('Page loaded successfully');
+    console.log('Preload page loaded. Now loading React app...');
+    
+    // Remove the previous listener to prevent multiple loads
+    mainWindow.webContents.removeAllListeners('did-finish-load');
+    
+    // Load the React app immediately without delay
+    mainWindow.loadURL(reactUrl);
+    console.log('React app loaded...');
   });
 
   mainWindow.webContents.on('did-fail-load', (event, errorCode, errorDescription) => {
@@ -111,7 +115,9 @@ async function startApp() {
   await app.whenReady();
 
   let port = 3000;
-  let startUrl = null;
+  let reactUrl = null;
+
+  const preloadUrl = path.join(__dirname, 'preload.html'); // Load the preload file
 
   try {
     let availablePort = await getAvailablePort(port);
@@ -119,7 +125,7 @@ async function startApp() {
       console.log(`Port ${port} is unavailable, switching to port 8080`);
       port = 8080;
     }
-    startUrl = await startReactApp(port);
+    reactUrl = await startReactApp(port);
   } catch (error) {
     console.error('Failed to start React app:', error);
     await cleanup(); // Ensure cleanup happens if React app fails to start
@@ -127,7 +133,7 @@ async function startApp() {
     return;
   }
 
-  createWindow(startUrl);
+  createWindow(preloadUrl, reactUrl);
 }
 
 startApp();

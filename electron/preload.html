@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Loading...</title>
+  <style>
+    body {
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #fff; /* Background color */
+    }
+
+    .loader {
+      width: 40px;
+      height: 40px;
+      position: relative;
+      --c: no-repeat linear-gradient(#183253 0 0); /* Base color */
+      background: 
+        var(--c) center/100% 10px,
+        var(--c) center/10px 100%;
+      animation: pulse 1.5s infinite; /* Pulsing effect */
+    }
+
+    .loader:before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: 
+        var(--c) 0 0,
+        var(--c) 100% 0,
+        var(--c) 0 100%,
+        var(--c) 100% 100%;
+      background-size: 15.5px 15.5px;
+      animation: l16 1.5s infinite cubic-bezier(0.3, 1, 0, 1); /* Original animation */
+    }
+
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+        --c: no-repeat linear-gradient(#183253 0 0); /* Base color */
+      }
+      25% {
+        transform: scale(1.1); /* Slightly enlarge */
+        --c: no-repeat linear-gradient(#154b67 0 0); /* Darkened color */
+      }
+      50% {
+        transform: scale(1); /* Return to original size */
+        --c: no-repeat linear-gradient(#183253 0 0); /* Lightened color */
+      }
+      75% {
+        transform: scale(1.1); /* Slightly enlarge */
+        --c: no-repeat linear-gradient(#0e3c4f 0 0); /* Darker color */
+      }
+      100% {
+        transform: scale(1); /* Return to original size */
+        --c: no-repeat linear-gradient(#183253 0 0); /* Back to base color */
+      }
+    }
+
+    @keyframes l16 {
+      33% { inset: -10px; transform: rotate(0deg); }
+      66% { inset: -10px; transform: rotate(90deg); }
+      100% { inset: 0; transform: rotate(90deg); }
+    }
+
+    /* Loading Text Styles */
+    .loading {
+      font-size: 14px; /* Font size for loading text */
+      font-family: Verdana;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 36px; /* Space between loader and text */
+    }
+
+    .loading span {
+      position: relative;
+      color: rgba(0, 0, 0, 0.2);
+      animation: loading08-parent 5s infinite;
+    }
+    .space {
+        display: inline-block; /* Makes the span behave like a block element */
+        width: 5px; /* Adjust the width to create space */
+    }
+
+    .loading span::after {
+      position: absolute;
+      top: 0;
+      left: 0;
+      content: attr(data-text);
+      color: #183253;
+      opacity: 0;
+      animation: loading08-child 5s infinite;
+    }
+
+    /* Delay for each letter */
+    .loading span:nth-child(1)::after { animation-delay: 0.0s; }
+    .loading span:nth-child(2)::after { animation-delay: 0.2s; }
+    .loading span:nth-child(3)::after { animation-delay: 0.4s; }
+    .loading span:nth-child(4)::after { animation-delay: 0.6s; }
+    .loading span:nth-child(5)::after { animation-delay: 0.8s; }
+    .loading span:nth-child(6)::after { animation-delay: 1.0s; }
+    .loading span:nth-child(7)::after { animation-delay: 1.2s; }
+
+    @keyframes loading08-parent {
+      0%, 35%, 100% {
+        color: rgba(0, 0, 0, 0.2);
+      }
+      60%, 80% {
+        color: #183253;
+      }
+    }
+
+    @keyframes loading08-child {
+      0% {
+        opacity: 1;
+      }
+      25%, 100% {
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="loader"></div>
+  <section> 
+    <div class="loading">
+      <span>l</span>
+      <span>o</span> 
+      <span>a</span> 
+      <span>d</span> 
+      <span>i</span> 
+      <span>n</span> 
+      <span>g</span>
+      <span class="space"></span>
+      <span>a</span>
+      <span>s</span>
+      <span>s</span>
+      <span>e</span>
+      <span>t</span>
+      <span>s</span>
+      <span class="space"></span>
+      <span>.</span> 
+      <span>.</span> 
+      <span>.</span>  
+    </div>
+  </section>
+</body>
+</html>

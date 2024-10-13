@@ -2,8 +2,8 @@ import { ScaleLoader } from 'react-spinners';
 
 function Loader() {
   return (
-    <div className="w-full py-4 px-2 flex-colo">
-      <ScaleLoader color="#66B5A3" />
+    <div className="fixed inset-0 flex items-center justify-center bg-white bg-opacity-50 z-50">
+      <ScaleLoader color="#183253" />
     </div>
   );
 }
