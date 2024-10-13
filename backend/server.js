@@ -9,6 +9,7 @@ const registerRoutes = require('./routes/register');
 const userRoutes = require('./routes/userRoutes');
 const appointmentRoutes = require('./routes/appointmentRoutes');
 const userProfileRoutes = require('./routes/profile');
+const patientRoutes = require('./routes/patient');
 const { errorHandler } = require('./utils/errorHandler');
 
 const app = express();
@@ -24,6 +25,7 @@ app.use('/api', registerRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api', userProfileRoutes);
 app.use('/api/appointments', appointmentRoutes);
+app.use('/api', patientRoutes);
 
 // Error Handling
 app.use(errorHandler);

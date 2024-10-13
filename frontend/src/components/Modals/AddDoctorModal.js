@@ -30,20 +30,8 @@ function AddDoctorModal({ closeModal, isOpen, doctor, datas }) {
 
       <div className="flex-colo gap-6">
         <div className="grid sm:grid-cols-2 gap-4 w-full">
-          <Input label="Full Name" color={true} placeholder="John Doe" />
-
-          <div className="flex w-full flex-col gap-3">
-            <p className="text-black text-sm">Title</p>
-            <Select
-              selectedPerson={instraction}
-              setSelectedPerson={setInstraction}
-              datas={sortsDatas.title}
-            >
-              <div className="w-full flex-btn text-textGray text-sm p-4 border border-border font-light rounded-lg focus:border focus:border-subMain">
-                {instraction.name} <BiChevronDown className="text-xl" />
-              </div>
-            </Select>
-          </div>
+          <Input label="First Name" color={true} placeholder="John" />
+          <Input label="Last Name" color={true} placeholder="Doe" />
         </div>
 
         <div className="grid sm:grid-cols-2 gap-4 w-full">

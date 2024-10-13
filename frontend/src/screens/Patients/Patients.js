@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Layout from '../../Layout';
-import { memberData, sortsDatas } from '../../components/Datas';
+import { sortsDatas } from '../../components/Datas';
 import { Link, useNavigate } from 'react-router-dom';
 import { BiChevronDown, BiPlus, BiTime } from 'react-icons/bi';
 import { BsCalendarMonth } from 'react-icons/bs';
@@ -8,13 +8,29 @@ import { MdFilterList, MdOutlineCalendarMonth } from 'react-icons/md';
 import { toast } from 'react-hot-toast';
 import { Button, FromToDate, Select } from '../../components/Form';
 import { PatientTable } from '../../components/Tables';
+import axios from 'axios';
 
 function Patients() {
   const [status, setStatus] = useState(sortsDatas.filterPatient[0]);
   const [gender, setGender] = useState(sortsDatas.genderFilter[0]);
   const [dateRange, setDateRange] = useState([new Date(), new Date()]);
   const [startDate, endDate] = dateRange;
+  const [patientsData, setPatientsData] = useState([]);
   const navigate = useNavigate();
+
+  // Function to fetch patient data from API
+  useEffect(() => {
+    const fetchPatients = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/api/patient');
+        setPatientsData(response.data);
+      } catch (error) {
+        toast.error('Failed to fetch patients');
+      }
+    };
+    fetchPatients();
+  }, []);
+
 
   const sorts = [
     {
@@ -143,7 +159,7 @@ function Patients() {
         </div>
         <div className="mt-8 w-full overflow-x-scroll">
           <PatientTable
-            data={memberData}
+            data={patientsData}
             functions={{
               preview: previewPayment,
             }}
