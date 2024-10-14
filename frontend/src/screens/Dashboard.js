@@ -1,24 +1,182 @@
 import React from 'react';
 import Layout from '../Layout';
+import { Calendar, momentLocalizer } from 'react-big-calendar';
+import moment from 'moment';
+import { BiChevronLeft, BiChevronRight, BiPlus, BiTime } from 'react-icons/bi';
+import { HiOutlineViewGrid } from 'react-icons/hi';
+import { HiOutlineCalendarDays } from 'react-icons/hi2';
+import { servicesData } from '../components/Datas';
 import {
   BsArrowDownLeft,
   BsArrowDownRight,
   BsArrowUpRight,
-  BsCheckCircleFill,
-  BsClockFill,
-  BsXCircleFill,
 } from 'react-icons/bs';
-import { DashboardBigChart, DashboardSmallChart } from '../components/Charts';
+import { DashboardSmallChart } from '../components/Charts';
 import {
-  appointmentsData,
   dashboardCards,
-  memberData,
-  transactionData,
 } from '../components/Datas';
-import { Transactiontable } from '../components/Tables';
-import { Link } from 'react-router-dom';
+// custom toolbar
+const CustomToolbar = (toolbar) => {
+  // today button handler
+  const goToBack = () => {
+    toolbar.date.setMonth(toolbar.date.getMonth() - 1);
+    toolbar.onNavigate('prev');
+  };
+
+  // next button handler
+  const goToNext = () => {
+    toolbar.date.setMonth(toolbar.date.getMonth() + 1);
+    toolbar.onNavigate('next');
+  };
+
+  // today button handler
+  const goToCurrent = () => {
+    toolbar.onNavigate('TODAY');
+  };
+
+  // month button handler
+  const goToMonth = () => {
+    toolbar.onView('month');
+  };
+
+  // week button handler
+  const goToWeek = () => {
+    toolbar.onView('week');
+  };
+
+  // day button handler
+  const goToDay = () => {
+    toolbar.onView('day');
+  };
+
+  // view button group
+  const viewNamesGroup = [
+    { view: 'month', label: 'Month' },
+    { view: 'week', label: 'Week' },
+    { view: 'day', label: 'Day' },
+  ];
+
+  return (
+    <div className="flex flex-col gap-8 mb-8 mt-8">
+      <div className="grid sm:grid-cols-2 md:grid-cols-12 gap-4">
+        <div className="md:col-span-1 flex sm:justify-start justify-center items-center">
+          <button
+            onClick={goToCurrent}
+            className="px-6 py-2 border border-subMain rounded-md text-subMain"
+          >
+            Today
+          </button>
+        </div>
+        {/* label */}
+        <div className="md:col-span-9 flex-rows gap-4">
+          <button onClick={goToBack} className="text-2xl text-subMain">
+            <BiChevronLeft />
+          </button>
+          <span className="text-xl font-semibold">
+            {moment(toolbar.date).format('MMMM YYYY')}
+          </span>
+          <button onClick={goToNext} className="text-2xl text-subMain">
+            <BiChevronRight />
+          </button>
+        </div>
+        {/* filter */}
+        <div className="md:col-span-2 grid grid-cols-3 rounded-md  border border-subMain">
+          {viewNamesGroup.map((item, index) => (
+            <button
+              key={index}
+              onClick={
+                item.view === 'month'
+                  ? goToMonth
+                  : item.view === 'week'
+                  ? goToWeek
+                  : goToDay
+              }
+              className={`border-l text-xl py-2 flex-colo border-subMain ${
+                toolbar.view === item.view
+                  ? 'bg-subMain text-white'
+                  : 'text-subMain'
+              }`}
+            >
+              {item.view === 'month' ? (
+                <HiOutlineViewGrid />
+              ) : item.view === 'week' ? (
+                <HiOutlineCalendarDays />
+              ) : (
+                <BiTime />
+              )}
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+
 
 function Dashboard() {
+
+  const localizer = momentLocalizer(moment);
+  const [open, setOpen] = React.useState(false);
+  const [data, setData] = React.useState({});
+
+  // handle modal close
+  const handleClose = () => {
+    setOpen(!open);
+    setData({});
+  };
+
+  const events = [
+    {
+      id: 0,
+      start: moment({ hours: 7 }).toDate(),
+      end: moment({ hours: 9 }).toDate(),
+      color: '#FB923C',
+      title: 'John Doe',
+      message: 'He is not sure about the time',
+      service: servicesData[1],
+      shareData: {
+        email: true,
+        sms: true,
+        whatsapp: false,
+      },
+    },
+    {
+      id: 1,
+      start: moment({ hours: 12 }).toDate(),
+      end: moment({ hours: 13 }).toDate(),
+      color: '#FC8181',
+      title: 'Minah Mmassy',
+      message: 'She is coming for checkup',
+      service: servicesData[2],
+      shareData: {
+        email: false,
+        sms: true,
+        whatsapp: false,
+      },
+    },
+
+    {
+      id: 2,
+      start: moment({ hours: 14 }).toDate(),
+      end: moment({ hours: 17 }).toDate(),
+      color: '#FFC107',
+      title: 'Irene P. Smith',
+      message: 'She is coming for checkup. but she is not sure about the time',
+      service: servicesData[3],
+      shareData: {
+        email: true,
+        sms: true,
+        whatsapp: true,
+      },
+    },
+  ];
+
+  // onClick event handler
+  const handleEventClick = (event) => {
+    setData(event);
+    setOpen(!open);
+  };
   return (
     <Layout>
       {/* boxes */}
@@ -62,124 +220,53 @@ function Dashboard() {
           </div>
         ))}
       </div>
-      <div className="w-full my-6 grid xl:grid-cols-8 grid-cols-1 gap-6">
-        <div className="xl:col-span-6  w-full">
-          {/* transaction */}
-          <div className="bg-white rounded-xl border-[1px] border-border p-5">
-            <div className="flex-btn gap-2">
-              <h2 className="text-sm font-medium">Recent Transaction</h2>
-              <p className="flex gap-4 text-sm items-center">
-                Today{' '}
-                <span className="py-1 px-2 bg-subMain text-white text-xs rounded-xl">
-                  27000$
-                </span>
-              </p>
-            </div>
-            {/* table */}
-            <div className="mt-4 overflow-x-scroll">
-              <Transactiontable
-                data={transactionData.slice(0, 5)}
-                action={false}
-              />
-            </div>
-          </div>
-          {/* Earning Reports */}
-          <div className="mt-6 bg-white rounded-xl border-[1px] border-border p-5">
-            <div className="flex-btn gap-2">
-              <h2 className="text-sm font-medium">Earning Reports</h2>
-              <p className="flex gap-4 text-sm items-center">
-                5.44%{' '}
-                <span className="py-1 px-2 bg-subMain text-white text-xs rounded-xl">
-                  +2.4%
-                </span>
-              </p>
-            </div>
-            <div className="mt-4">
-              <DashboardBigChart />
-            </div>
-          </div>
-        </div>
-        {/* side 2 */}
-        <div
-          data-aos="fade-left"
-          data-aos-duration="1000"
-          data-aos-delay="10"
-          data-aos-offset="200"
-          className="xl:col-span-2 xl:block grid sm:grid-cols-2 gap-6"
-        >
-          {/* today apointments */}
-          <div className="bg-white rounded-xl border-[1px] border-border p-5">
-            <h2 className="text-sm mb-4 font-medium">Today Appointments</h2>
-            {appointmentsData.map((appointment, index) => (
-              <div
-                key={appointment.id}
-                className="grid grid-cols-12 gap-2 items-center"
-              >
-                <p className="text-textGray text-[12px] col-span-3 font-light">
-                  {appointment.time}
-                </p>
-                <div className="flex-colo relative col-span-2">
-                  <hr className="w-[2px] h-20 bg-border" />
-                  <div
-                    className={`w-7 h-7 flex-colo text-sm bg-opacity-10
-                   ${
-                     appointment.status === 'Pending' &&
-                     'bg-orange-500 text-orange-500'
-                   }
-                  ${
-                    appointment.status === 'Cancel' && 'bg-red-500 text-red-500'
-                  }
-                  ${
-                    appointment.status === 'Approved' &&
-                    'bg-green-500 text-green-500'
-                  }
-                   rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2`}
-                  >
-                    {appointment.status === 'Pending' && <BsClockFill />}
-                    {appointment.status === 'Cancel' && <BsXCircleFill />}
-                    {appointment.status === 'Approved' && <BsCheckCircleFill />}
-                  </div>
-                </div>
-                <Link
-                  to="/appointments"
-                  className="flex flex-col gap-1 col-span-6"
-                >
-                  <h2 className="text-xs font-medium">
-                    {appointment.user?.title}
-                  </h2>
-                  <p className="text-[12px] font-light text-textGray">
-                    {appointment.from} - {appointment.to}
-                  </p>
-                </Link>
-              </div>
-            ))}
-          </div>
-          {/* recent patients */}
-          <div className="bg-white rounded-xl border-[1px] border-border p-5 xl:mt-6">
-            <h2 className="text-sm font-medium">Recent Patients</h2>
-            {memberData.slice(3, 8).map((member, index) => (
-              <Link
-                to={`/patients/preview/${member.id}`}
-                key={index}
-                className="flex-btn gap-4 mt-6 border-b pb-4 border-border"
-              >
-                <div className="flex gap-4 items-center">
-                  <img
-                    src={member.image}
-                    alt="member"
-                    className="w-10 h-10 rounded-md object-cover"
-                  />
-                  <div className="flex flex-col gap-1">
-                    <h3 className="text-xs font-medium">{member.title}</h3>
-                    <p className="text-xs text-gray-400">{member.phone}</p>
-                  </div>
-                </div>
-                <p className="text-xs text-textGray">2:00 PM</p>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </div>
+      <Calendar
+        localizer={localizer}
+        events={events}
+        startAccessor="start"
+        endAccessor="end"
+        style={{
+          // height fix screen
+          height: 900,
+          marginBottom: 50,
+        }}
+        onSelectEvent={(event) => handleEventClick(event)}
+        defaultDate={new Date()}
+        timeslots={1}
+        resizable
+        step={60}
+        selectable={true}
+        // custom event style
+        eventPropGetter={(event) => {
+          const style = {
+            backgroundColor: '#66B5A3',
+
+            borderRadius: '10px',
+            color: 'white',
+            border: '1px',
+            borderColor: '#F2FAF8',
+            fontSize: '12px',
+            padding: '5px 5px',
+          };
+          return {
+            style,
+          };
+        }}
+        // custom date style
+        dayPropGetter={(date) => {
+          const backgroundColor = 'white';
+          const style = {
+            backgroundColor,
+          };
+          return {
+            style,
+          };
+        }}
+        // remove agenda view
+        views={['month', 'day', 'week']}
+        // toolbar={false}
+        components={{ toolbar: CustomToolbar }}
+      />
     </Layout>
   );
 }
