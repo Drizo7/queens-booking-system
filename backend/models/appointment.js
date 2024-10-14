@@ -14,12 +14,15 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       defaultValue: 'Scheduled', // e.g., Scheduled/Confirmed/Completed/Cancelled/No-show
     },
+    start_time: {
+      type: DataTypes.STRING,
+    },
     duration: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
       allowNull: false,
     },
-    reason_for_visit: {
-      type: DataTypes.TEXT,
+    description: {
+      type: DataTypes.STRING,
     },
   }, {
     timestamps: true,

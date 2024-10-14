@@ -441,8 +441,8 @@ export function PatientTable({ data, functions, used }) {
     </table>
   );
 }
-// doctor table
-export function DoctorsTable({ data, functions, doctor }) {
+// receptionist table
+export function ReceptionistsTable({ data, functions }) {
   const DropDown1 = [
     {
       title: 'View',
@@ -464,7 +464,6 @@ export function DoctorsTable({ data, functions, doctor }) {
       <thead className="bg-dry rounded-md overflow-hidden">
         <tr>
           <th className={thclass}>Id</th>
-          <th className={thclass}>{doctor ? 'Doctor' : 'Receptionist'}</th>
           <th className={thclass}>First Name</th>
           <th className={thclass}>Last Name</th>
           <th className={thclass}>Phone</th>
@@ -476,28 +475,12 @@ export function DoctorsTable({ data, functions, doctor }) {
         {data.map((item, index) => (
           <tr
             key={item.id}
-            className="border-b border-border hover:bg-greyed transitions"
-          >
+            className="border-b border-border hover:bg-greyed transitions">
             <td className={tdclass}>{index + 1}</td>
-            <td className={tdclass}>
-              <div className="flex gap-4 items-center">
-                <span className="w-12">
-                  <img
-                    src={item.user.image}
-                    alt={item.user.title}
-                    className="w-full h-12 rounded-full object-cover border border-border"
-                  />
-                </span>
-                <h4 className="text-sm font-medium">{item.user.title}</h4>
-              </div>
-            </td>
-            <td className={tdclass}>12 May, 2021</td>
-            <td className={tdclass}>
-              <p className="text-textGray">{item.user.phone}</p>
-            </td>
-            <td className={tdclass}>{item.title}</td>
-            <td className={tdclass}>{item.user.email}</td>
-
+            <td className={tdclass}>{item.first_name}</td>
+            <td className={tdclass}>{item.last_name}</td>
+            <td className={tdclass}>{item.email}</td>
+            <td className={tdclass}>{item.phone_number}</td>
             <td className={tdclass}>
               <MenuSelect datas={DropDown1} item={item}>
                 <div className="bg-dry border text-main text-xl py-2 px-4 rounded-lg">
@@ -511,6 +494,121 @@ export function DoctorsTable({ data, functions, doctor }) {
     </table>
   );
 }
+
+// doctor table
+export function DoctorsTable({ data, functions }) {
+  const DropDown1 = [
+    {
+      title: 'View',
+      icon: FiEye,
+      onClick: (data) => {
+        functions.preview(data);
+      },
+    },
+    {
+      title: 'Delete',
+      icon: RiDeleteBin6Line,
+      onClick: () => {
+        toast.error('This feature is not available yet');
+      },
+    },
+  ];
+  return (
+    <table className="table-auto w-full">
+      <thead className="bg-dry rounded-md overflow-hidden">
+        <tr>
+          <th className={thclass}>Id</th>
+          <th className={thclass}>First Name</th>
+          <th className={thclass}>Last Name</th>
+          <th className={thclass}>Phone</th>
+          <th className={thclass}>Email</th>
+          <th className={thclass}>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {data.map((item, index) => (
+          <tr
+            key={item.id}
+            className="border-b border-border hover:bg-greyed transitions">
+            <td className={tdclass}>{index + 1}</td>
+            <td className={tdclass}>{item.first_name}</td>
+            <td className={tdclass}>{item.last_name}</td>
+            <td className={tdclass}>{item.email}</td>
+            <td className={tdclass}>{item.phone_number}</td>
+            <td className={tdclass}>
+              <MenuSelect datas={DropDown1} item={item}>
+                <div className="bg-dry border text-main text-xl py-2 px-4 rounded-lg">
+                  <BiDotsHorizontalRounded />
+                </div>
+              </MenuSelect>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+}
+// appointments table
+export function AppointmentsTable({ data, functions }) {
+  const DropDown1 = [
+    {
+      title: 'View',
+      icon: FiEye,
+      onClick: (item) => {
+        functions.preview(item.id);
+      },
+    },
+    {
+      title: 'Delete',
+      icon: RiDeleteBin6Line,
+      onClick: () => {
+        toast.error('This feature is not available yet');
+      },
+    },
+  ];
+
+  
+
+  return (
+    <table className="table-auto w-full">
+      <thead className="bg-dry rounded-md overflow-hidden">
+        <tr>
+          <th className={thclass}>Id</th>
+          <th className={thclass}>Patient Id</th>
+          <th className={thclass}>Date</th>
+          <th className={thclass}>Start Time</th>
+          <th className={thclass}>Duration</th>
+          <th className={thclass}>Status</th>
+          <th className={thclass}>Description</th>
+          <th className={thclass}>Doctor Id</th>
+          <th className={thclass}>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {data.map((appointment, index) => (
+          <tr key={appointment.id} className="border-b border-border hover:bg-greyed transitions">
+            <td className={tdclass}>{index + 1}</td> {/* Incremented index */}
+            <td className={tdclass}>{appointment.patient_id}</td> {/* Placeholder for Patient Name */}
+            <td className={tdclass}>{appointment.doctor_id}</td> {/* Placeholder for Doctor Name */}
+            <td className={tdclass}>{new Date(appointment.date).toLocaleDateString()}</td>
+            <td className={tdclass}>{appointment.start_time}</td>
+            <td className={tdclass}>{appointment.duration}</td>
+            <td className={tdclass}>{appointment.status}</td>
+            <td className={tdclass}>{appointment.description}</td>
+            <td className={tdclass}>
+              <MenuSelect datas={DropDown1} appointment={appointment}>
+                <div className="bg-dry border text-main text-xl py-2 px-4 rounded-lg">
+                  <BiDotsHorizontalRounded />
+                </div>
+              </MenuSelect>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+}
+
 
 // appointment table
 export function AppointmentTable({ data, functions, doctor }) {

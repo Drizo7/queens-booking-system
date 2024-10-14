@@ -4,8 +4,8 @@ import { toast } from 'react-hot-toast';
 import { BiPlus } from 'react-icons/bi';
 import Layout from '../Layout';
 import { Button } from '../components/Form';
-import { DoctorsTable } from '../components/Tables';
-import AddDoctorModal from '../components/Modals/AddDoctorModal';
+import { ReceptionistsTable } from '../components/Tables';
+import AddReceptionistModal from '../components/Modals/AddReceptionistModal';
 import { receptionsData } from '../components/Datas';
 
 function Receptions() {
@@ -25,12 +25,11 @@ function Receptions() {
   return (
     <Layout>
       {
-        // add doctor modal
+        // add receptionist modal
         isOpen && (
-          <AddDoctorModal
+          <AddReceptionistModal
             closeModal={onCloseModal}
             isOpen={isOpen}
-            doctor={false}
             datas={data}
           />
         )
@@ -57,7 +56,7 @@ function Receptions() {
           <div className="md:col-span-5 grid lg:grid-cols-4 items-center gap-6">
             <input
               type="text"
-              placeholder='Search "Amina Mwakio"'
+              placeholder='Search Receptionist'
               className="h-14 w-full text-sm text-main rounded-md bg-dry border border-border px-4"
             />
           </div>
@@ -72,8 +71,7 @@ function Receptions() {
           />
         </div>
         <div className="mt-8 w-full overflow-x-scroll">
-          <DoctorsTable
-            doctor={false}
+          <ReceptionistsTable
             data={receptionsData}
             functions={{
               preview: preview,

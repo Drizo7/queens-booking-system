@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
 import Modal from './Modal';
 import { Button, Input, Select } from '../Form';
-import { BiChevronDown } from 'react-icons/bi';
 import { sortsDatas } from '../Datas';
 import { HiOutlineCheckCircle } from 'react-icons/hi';
 import { toast } from 'react-hot-toast';
 import Access from '../Access';
 import Uploader from '../Uploader';
 
-function AddDoctorModal({ closeModal, isOpen, doctor, datas }) {
+function AddReceptionistModal({ closeModal, isOpen, datas }) {
   const [instraction, setInstraction] = useState(sortsDatas.title[0]);
   const [access, setAccess] = useState({});
 
@@ -20,7 +19,7 @@ function AddDoctorModal({ closeModal, isOpen, doctor, datas }) {
     <Modal
       closeModal={closeModal}
       isOpen={isOpen}
-      title={doctor ? 'Add Doctor' : datas?.id ? 'Edit Stuff' : 'Add Stuff'}
+      title={'Add Receptionist'}
       width={'max-w-3xl'}
     >
       <div className="flex gap-3 flex-col col-span-6 mb-6">
@@ -38,6 +37,7 @@ function AddDoctorModal({ closeModal, isOpen, doctor, datas }) {
           <Input label="Email" color={true} />
           <Input label="Phone Number" color={true} />
         </div>
+
 
         {/* table access */}
         <div className="w-full">
@@ -59,4 +59,4 @@ function AddDoctorModal({ closeModal, isOpen, doctor, datas }) {
   );
 }
 
-export default AddDoctorModal;
+export default AddReceptionistModal;

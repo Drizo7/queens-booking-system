@@ -4,7 +4,7 @@ import { Checkbox } from './Form';
 function Access({ setAccess }) {
   const thclass = 'text-start text-xs font-medium py-3 px-2 whitespace-nowrap';
   const tdclass = 'text-start text-sm py-4 px-2 whitespace-nowrap';
-  const [parientAccess, setParientAccess] = useState({
+  const [patientAccess, setPatientAccess] = useState({
     read: false,
     create: false,
     delete: false,
@@ -16,22 +16,10 @@ function Access({ setAccess }) {
     delete: false,
     edit: false,
   });
-  const [invoicesAccess, setInvoicesAccess] = useState({
-    read: false,
-    create: false,
-    delete: false,
-    edit: false,
-  });
-  const [paymentsAccess, setPaymentsAccess] = useState({
-    read: false,
-    create: false,
-    delete: false,
-    edit: false,
-  });
 
   // on change patient
   const onChangePatient = (e) => {
-    setParientAccess({ ...parientAccess, [e.target.name]: e.target.checked });
+    setPatientAccess({ ...patientAccess, [e.target.name]: e.target.checked });
   };
   // on change appointment
   const onChangeAppointment = (e) => {
@@ -41,21 +29,12 @@ function Access({ setAccess }) {
     });
   };
 
-  // on change invoices
-  const onChangeInvoices = (e) => {
-    setInvoicesAccess({ ...invoicesAccess, [e.target.name]: e.target.checked });
-  };
-
-  // on change payments
-  const onChangePayments = (e) => {
-    setPaymentsAccess({ ...paymentsAccess, [e.target.name]: e.target.checked });
-  };
 
   const datas = [
     {
       id: 1,
-      name: 'Parient',
-      access: parientAccess,
+      name: 'Patient',
+      access: patientAccess,
       onChange: onChangePatient,
     },
     {
@@ -64,33 +43,17 @@ function Access({ setAccess }) {
       access: appointmentAccess,
       onChange: onChangeAppointment,
     },
-    {
-      id: 3,
-      name: 'Invoices',
-      access: invoicesAccess,
-      onChange: onChangeInvoices,
-    },
-    {
-      id: 4,
-      name: 'Payments',
-      access: paymentsAccess,
-      onChange: onChangePayments,
-    },
   ];
 
   // send access to parent component
   useEffect(() => {
     setAccess({
-      parientAccess,
+      patientAccess,
       appointmentAccess,
-      invoicesAccess,
-      paymentsAccess,
     });
   }, [
-    parientAccess,
-    appointmentAccess,
-    invoicesAccess,
-    paymentsAccess,
+    patientAccess,
+    appointmentAccess,-
     setAccess,
   ]);
 

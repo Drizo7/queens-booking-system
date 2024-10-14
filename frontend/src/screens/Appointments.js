@@ -4,7 +4,7 @@ import { toast } from 'react-hot-toast';
 import { BiChevronDown, BiPlus } from 'react-icons/bi';
 import Layout from '../Layout';
 import { Button, Select } from '../components/Form';
-import { ClinicTable } from '../components/Tables';
+import { AppointmentsTable } from '../components/Tables';
 import { sortsDatas } from '../components/Datas';
 import AddAppointmentModal from '../components/Modals/AddApointmentModal';
 
@@ -39,7 +39,6 @@ function Appointments() {
           }}
         />
       )}
-      {/* calender */}
       <button
         onClick={handleClose}
         className="w-16 animate-bounce h-16 border border-border z-50 bg-subMain text-white rounded-full flex-colo fixed bottom-8 right-12 button-fb"
@@ -47,7 +46,7 @@ function Appointments() {
         <BiPlus className="text-2xl" />
       </button>
 {/*  */}
-      <h1 className="text-xl font-semibold">Appointments</h1>
+      <h1 className="text-xl font-semibold">Appointments List</h1>
       <div
         data-aos="fade-up"
         data-aos-duration="1000"
@@ -85,7 +84,7 @@ function Appointments() {
           />
         </div>
         <div className="mt-8 w-full overflow-x-scroll">
-          <ClinicTable data={appointmentsData} />
+          <AppointmentsTable data={appointmentsData} />
         </div>
       </div>
       
