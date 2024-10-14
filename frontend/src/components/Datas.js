@@ -62,12 +62,12 @@ export const MenuDatas = [
     path: '/clinic',
     icon: MdOutlineInventory2,
   },
-  {
+  /*{
     title: 'Payments',
     path: '/payments',
     icon: MdListAlt,
   },
-  /* {
+   {
     title: 'Invoices',
     path: '/invoices',
     icon: TbFileInvoice,
@@ -76,12 +76,12 @@ export const MenuDatas = [
     title: 'Services',
     path: '/services',
     icon: MdOutlineInventory2,
-  }, */
+  }, 
   {
     title: 'Medicine',
     path: '/medicine',
     icon: RiMedicineBottleLine,
-  },
+  },*/
   /* {
     title: 'Campaigns',
     path: '/campaigns',
