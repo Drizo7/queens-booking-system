@@ -255,6 +255,66 @@ export function MedicineTable({ data, onEdit }) {
   );
 }
 
+// clinic table
+export function ClinicTable({ data, onEdit }) {
+  const DropDown1 = [
+    {
+      title: 'Edit',
+      icon: FiEdit,
+      onClick: (item) => {
+        onEdit(item);
+      },
+    },
+    {
+      title: 'Delete',
+      icon: RiDeleteBin6Line,
+      onClick: () => {
+        toast.error('This feature is not available yet');
+      },
+    },
+  ];
+
+  const thclass = 'text-start text-sm font-medium py-3 px-2 whitespace-nowrap';
+  const tdclass = 'text-start text-xs py-4 px-2 whitespace-nowrap';
+
+  return (
+    <table className="table-auto w-full">
+      <thead className="bg-dry rounded-md overflow-hidden">
+        <tr>
+          <th className={thclass}>Id</th>
+          <th className={thclass}>Name</th>
+          <th className={thclass}>Location</th>
+          <th className={thclass}>Operating Hours</th>
+          <th className={thclass}>Description</th>
+          <th className={thclass}>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {data.map((item, index) => (
+          <tr
+            key={item.id}
+            className="border-b border-border hover:bg-greyed transitions"
+          >
+            <td className={tdclass}>{index + 1}</td>
+            <td className={tdclass}>{item.name}</td>
+            <td className={tdclass}>{item.location}</td>
+            <td className={tdclass}>{item.operating_hours}</td>
+            <td className={tdclass}>{item.description}</td>
+            <td className={tdclass}>
+              <MenuSelect datas={DropDown1} item={item}>
+                <div className="bg-dry border text-main text-xl py-2 px-4 rounded-lg">
+                  <BiDotsHorizontalRounded />
+                </div>
+              </MenuSelect>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+}
+
+
 // service table
 export function ServiceTable({ data, onEdit }) {
   const DropDown1 = [

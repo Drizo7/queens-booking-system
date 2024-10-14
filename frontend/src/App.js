@@ -20,6 +20,7 @@ import PreviewInvoice from './screens/Invoices/PreviewInvoice';
 import EditPayment from './screens/Payments/EditPayment';
 import PreviewPayment from './screens/Payments/PreviewPayment';
 import Medicine from './screens/Medicine';
+import Clinic from './screens/Clinic';
 import PatientProfile from './screens/Patients/PatientProfile';
 import CreatePatient from './screens/Patients/CreatePatient';
 import Doctors from './screens/Doctors/Doctors';
@@ -90,6 +91,7 @@ const LoaderWrapper = () => {
         <Route path="/appointments" element={<Appointments />} />
         <Route path="/campaigns" element={<Campaings />} />
         <Route path="/medicine" element={<Medicine />} />
+        <Route path="/clinic" element={<Clinic />} />
         <Route path="/services" element={<Services />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="*" element={<NotFound />} />

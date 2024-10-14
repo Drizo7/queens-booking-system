@@ -58,6 +58,11 @@ export const MenuDatas = [
     icon: FaRegCalendarAlt,
   },
   {
+    title: 'Clinics',
+    path: '/clinic',
+    icon: MdOutlineInventory2,
+  },
+  {
     title: 'Payments',
     path: '/payments',
     icon: MdListAlt,
@@ -903,8 +908,8 @@ export const dashboardCards = [
   },
   {
     id: 4,
-    title: 'Total Earnings',
-    icon: MdOutlineAttachMoney,
+    title: 'Clinics',
+    icon: MdOutlineInventory2,
     value: 4590,
     percent: 45.06,
     color: ['bg-red-500', 'text-red-500', '#FF3B30'],

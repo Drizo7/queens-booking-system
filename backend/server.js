@@ -6,10 +6,9 @@ const bcrypt = require('bcrypt');
 const db = require('./models'); // Adjust the path as necessary
 const authRoutes = require('./routes/auth');
 const registerRoutes = require('./routes/register');
-const userRoutes = require('./routes/userRoutes');
-const appointmentRoutes = require('./routes/appointmentRoutes');
 const userProfileRoutes = require('./routes/profile');
 const patientRoutes = require('./routes/patient');
+const clinicRoutes = require('./routes/clinic');
 const { errorHandler } = require('./utils/errorHandler');
 
 const app = express();
@@ -22,16 +21,15 @@ app.use(bodyParser.json());
 // Routes
 app.use('/api', authRoutes);
 app.use('/api', registerRoutes);
-app.use('/api/users', userRoutes);
 app.use('/api', userProfileRoutes);
-app.use('/api/appointments', appointmentRoutes);
 app.use('/api', patientRoutes);
+app.use('/api', clinicRoutes);
 
 // Error Handling
 app.use(errorHandler);
 
 // Function to create a user
-const createUser = async () => {
+/* const createUser = async () => {
   try {
     const existingUser = await db.User.findOne({ where: { email: 'receptionist@example.com' } });
     if (!existingUser) {
@@ -48,7 +46,7 @@ const createUser = async () => {
   } catch (error) {
     console.error('Error creating user:', error);
   }
-};
+}; */
 
 // Sync the database and start the server
 db.sequelize.sync()
