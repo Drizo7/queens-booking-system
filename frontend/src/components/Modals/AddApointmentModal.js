@@ -2,11 +2,9 @@ import React, { useEffect, useState } from 'react';
 import Modal from './Modal';
 import {
   Button,
-  Checkbox,
   DatePickerComp,
   Input,
   Select,
-  Textarea,
   TimePickerComp,
 } from '../Form';
 import { BiChevronDown, BiPlus } from 'react-icons/bi';
@@ -27,28 +25,18 @@ function AddAppointmentModal({ closeModal, isOpen, datas }) {
   const [services, setServices] = useState(servicesData[0]);
   const [startDate, setStartDate] = useState(new Date());
   const [startTime, setStartTime] = useState(new Date());
-  const [endTime, setEndTime] = useState(new Date());
   const [status, setStatus] = useState(sortsDatas.status[0]);
   const [doctors, setDoctors] = useState(doctorsData[0]);
-  const [shares, setShares] = useState({
-    email: false,
-    sms: false,
-    whatsapp: false,
-  });
+
   const [open, setOpen] = useState(false);
 
-  // on change share
-  const onChangeShare = (e) => {
-    setShares({ ...shares, [e.target.name]: e.target.checked });
-  };
+
 
   // set data
   useEffect(() => {
     if (datas?.title) {
       setServices(datas?.service);
       setStartTime(datas?.start);
-      setEndTime(datas?.end);
-      setShares(datas?.shareData);
     }
   }, [datas]);
 
@@ -86,42 +74,7 @@ function AddAppointmentModal({ closeModal, isOpen, datas }) {
             <BiPlus /> Add
           </button>
         </div>
-
-        <div className="grid sm:grid-cols-2 gap-4 w-full">
-          <div className="flex w-full flex-col gap-3">
-            <p className="text-black text-sm">Purpose of visit</p>
-            <Select
-              selectedPerson={services}
-              setSelectedPerson={setServices}
-              datas={servicesData}
-            >
-              <div className="w-full flex-btn text-textGray text-sm p-4 border border-border font-light rounded-lg focus:border focus:border-subMain">
-                {services.name} <BiChevronDown className="text-xl" />
-              </div>
-            </Select>
-          </div>
-          {/* date */}
-          <DatePickerComp
-            label="Date of visit"
-            startDate={startDate}
-            onChange={(date) => setStartDate(date)}
-          />
-        </div>
-
-        <div className="grid sm:grid-cols-2 gap-4 w-full">
-          <TimePickerComp
-            label="Start time"
-            startDate={startTime}
-            onChange={(date) => setStartTime(date)}
-          />
-          <TimePickerComp
-            label="End time"
-            startDate={endTime}
-            onChange={(date) => setEndTime(date)}
-          />
-        </div>
-
-        {/* status && doctor */}
+        {/* doctor */}
         <div className="grid sm:grid-cols-2 gap-4 w-full">
           <div className="flex w-full flex-col gap-3">
             <p className="text-black text-sm">Doctor</p>
@@ -135,6 +88,35 @@ function AddAppointmentModal({ closeModal, isOpen, datas }) {
               </div>
             </Select>
           </div>
+        </div>
+
+        <div className="grid sm:grid-cols-2 gap-4 w-full">
+          {/* date */}
+          <DatePickerComp
+            label="Date of visit"
+            startDate={startDate}
+            onChange={(date) => setStartDate(date)}
+          />
+          <TimePickerComp
+            label="Start time"
+            startDate={startTime}
+            onChange={(date) => setStartTime(date)}
+          />
+        </div>
+
+        <div className="grid sm:grid-cols-2 gap-4 w-full">
+          <div className="flex w-full flex-col gap-3">
+            <p className="text-black text-sm">Duration of Visit</p>
+            <Select
+              selectedPerson={services}
+              setSelectedPerson={setServices}
+              datas={servicesData}
+            >
+              <div className="w-full flex-btn text-textGray text-sm p-4 border border-border font-light rounded-lg focus:border focus:border-subMain">
+                {services.name} <BiChevronDown className="text-xl" />
+              </div>
+            </Select>
+          </div> 
           <div className="flex w-full flex-col gap-3">
             <p className="text-black text-sm">Status</p>
             <Select
@@ -149,8 +131,8 @@ function AddAppointmentModal({ closeModal, isOpen, datas }) {
           </div>
         </div>
 
-        {/* des */}
-        <Textarea
+        {/* description */}
+        <Input
           label="Description"
           placeholder={
             datas?.message
@@ -158,34 +140,10 @@ function AddAppointmentModal({ closeModal, isOpen, datas }) {
               : 'She will be coming for a checkup.....'
           }
           color={true}
-          rows={5}
         />
 
-        {/* share */}
-        <div className="flex-col flex gap-8 w-full">
-          <p className="text-black text-sm">Share with patient via</p>
-          <div className="flex flex-wrap sm:flex-nowrap gap-4">
-            <Checkbox
-              name="email"
-              checked={shares.email}
-              onChange={onChangeShare}
-              label="Email"
-            />
-            <Checkbox
-              name="sms"
-              checked={shares.sms}
-              onChange={onChangeShare}
-              label="SMS"
-            />
-            <Checkbox
-              checked={shares.whatsapp}
-              name="whatsapp"
-              onChange={onChangeShare}
-              label="WhatsApp"
-            />
-          </div>
-        </div>
-        {/* buttones */}
+        
+        {/* buttons */}
         <div className="grid sm:grid-cols-2 gap-4 w-full">
           <button
             onClick={closeModal}
