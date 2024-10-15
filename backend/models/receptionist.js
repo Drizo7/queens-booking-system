@@ -26,5 +26,10 @@ module.exports = (sequelize, DataTypes) => {
     timestamps: true,
   });
 
+  Receptionist.associate = (models) => {
+    // Define the association after all models are available
+    Receptionist.belongsTo(models.User, { as: 'user', foreignKey: 'user_id' });
+  };
+
   return Receptionist;
 };

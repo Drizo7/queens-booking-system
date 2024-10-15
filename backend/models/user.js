@@ -35,5 +35,10 @@ module.exports = (sequelize, DataTypes) => {
     timestamps: true, // Automatically adds 'createdAt' and 'updatedAt' fields
   });
 
+  User.associate = (models) => {
+    // Define the association after all models are available
+    User.hasOne(models.Receptionist, { as: 'receptionistDetails', foreignKey: 'user_id' });
+  };
+  
   return User;
 };

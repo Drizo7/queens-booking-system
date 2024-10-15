@@ -1,10 +1,10 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
-const { User } = require('../models'); // Adjust based on your models folder structure
+const { User, Receptionist } = require('../models'); // Adjust based on your models folder structure
 const router = express.Router();
 
 router.post('/register', async (req, res) => {
-  const { first_name, last_name, email, phone_number, password } = req.body;
+  const { first_name, last_name, email, phone_number, password, role } = req.body;
 
   try {
     // Check if the email already exists
@@ -24,6 +24,15 @@ router.post('/register', async (req, res) => {
       phone_number,
       password: hashedPassword,
       role: 'receptionist', // Set role as 'receptionist'
+    });
+
+     // Add receptionist-specific data
+    await Receptionist.create({
+      user_id: newUser.id, // Link with the User table
+      first_name,
+      last_name,
+      email,
+      phone_number,
     });
 
     res.status(201).json({ message: 'User created successfully', user: newUser });
