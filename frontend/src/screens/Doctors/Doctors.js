@@ -1,21 +1,42 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import { MdOutlineCloudDownload } from 'react-icons/md';
 import { toast } from 'react-hot-toast';
-import { BiPlus } from 'react-icons/bi';
+import { BiChevronDown, BiPlus } from 'react-icons/bi';
 import Layout from '../../Layout';
 import { Button } from '../../components/Form';
 import { DoctorsTable } from '../../components/Tables';
-import { doctorsData } from '../../components/Datas';
 import { useNavigate } from 'react-router-dom';
 import AddDoctorModal from '../../components/Modals/AddDoctorModal';
+import axios from 'axios';
 
 function Doctors() {
   const [isOpen, setIsOpen] = React.useState(false);
+  const [doctorData, setDoctorData] = useState([]);
   const navigate = useNavigate();
+
+  const fetchDoctors = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/api/doctor');
+      setDoctorData(response.data); // Assuming API sends doctor details
+    } catch (error) {
+      toast.error('Failed to fetch doctors');
+    }
+  };
 
   const onCloseModal = () => {
     setIsOpen(false);
+    fetchDoctors(); // Refetch doctor data after modal closes
   };
+
+  const onEdit = (data) => {
+    setIsOpen(true);
+    // Handle setting the data for editing if needed
+  };
+
+  // Fetch doctors when the component mounts
+  useEffect(() => {
+    fetchDoctors();
+  }, []);
 
   const preview = (data) => {
     navigate(`/doctors/preview/${data.id}`);
@@ -56,7 +77,7 @@ function Doctors() {
           <div className="md:col-span-5 grid lg:grid-cols-4 items-center gap-6">
             <input
               type="text"
-              placeholder='Search "daudi mburuge"'
+              placeholder='Search doctor'
               className="h-14 w-full text-sm text-main rounded-md bg-dry border border-border px-4"
             />
           </div>
@@ -73,7 +94,7 @@ function Doctors() {
         <div className="mt-8 w-full overflow-x-scroll">
           <DoctorsTable
             doctor={true}
-            data={doctorsData}
+            data={doctorData}
             functions={{
               preview: preview,
             }}

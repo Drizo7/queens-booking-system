@@ -7,7 +7,7 @@ import { toast } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 
 const thclass = 'text-start text-sm font-medium py-3 px-2 whitespace-nowrap';
-const tdclass = 'text-start text-sm py-4 px-2 whitespace-nowrap';
+const tdclass = 'text-start text-xs py-4 px-2 whitespace-nowrap';
 
 export function Transactiontable({ data, action, functions }) {
   const DropDown1 = [
@@ -424,7 +424,11 @@ export function PatientTable({ data, functions, used }) {
             <td className={tdclasse}>{item.first_name}</td>
             <td className={tdclasse}>{item.last_name}</td>
             <td className={tdclasse}>{item.gender}</td>
-            <td className={tdclasse}>{item.date_of_birth}</td>
+            <td className={tdclasse}>{new Date(item.date_of_birth).toLocaleDateString(undefined, {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
+            })}</td>
             <td className={tdclasse}>{item.email}</td>
             <td className={tdclasse}>{item.phone_number}</td>
             <td className={tdclasse}>{item.address}</td>
@@ -466,7 +470,7 @@ export function ReceptionistsTable({ data, functions }) {
           <th className={thclass}>Id</th>
           <th className={thclass}>First Name</th>
           <th className={thclass}>Last Name</th>
-          <th className={thclass}>Phone</th>
+          <th className={thclass}>Phone Number</th>
           <th className={thclass}>Email</th>
           <th className={thclass}>Actions</th>
         </tr>
@@ -479,8 +483,8 @@ export function ReceptionistsTable({ data, functions }) {
             <td className={tdclass}>{index + 1}</td>
             <td className={tdclass}>{item.first_name}</td>
             <td className={tdclass}>{item.last_name}</td>
-            <td className={tdclass}>{item.email}</td>
             <td className={tdclass}>{item.phone_number}</td>
+            <td className={tdclass}>{item.email}</td>
             <td className={tdclass}>
               <MenuSelect datas={DropDown1} item={item}>
                 <div className="bg-dry border text-main text-xl py-2 px-4 rounded-lg">
@@ -520,7 +524,7 @@ export function DoctorsTable({ data, functions }) {
           <th className={thclass}>Id</th>
           <th className={thclass}>First Name</th>
           <th className={thclass}>Last Name</th>
-          <th className={thclass}>Phone</th>
+          <th className={thclass}>Phone Number</th>
           <th className={thclass}>Email</th>
           <th className={thclass}>Actions</th>
         </tr>
@@ -533,8 +537,8 @@ export function DoctorsTable({ data, functions }) {
             <td className={tdclass}>{index + 1}</td>
             <td className={tdclass}>{item.first_name}</td>
             <td className={tdclass}>{item.last_name}</td>
-            <td className={tdclass}>{item.email}</td>
             <td className={tdclass}>{item.phone_number}</td>
+            <td className={tdclass}>{item.email}</td>
             <td className={tdclass}>
               <MenuSelect datas={DropDown1} item={item}>
                 <div className="bg-dry border text-main text-xl py-2 px-4 rounded-lg">
@@ -548,6 +552,7 @@ export function DoctorsTable({ data, functions }) {
     </table>
   );
 }
+
 // appointments table
 export function AppointmentsTable({ data, functions }) {
   const DropDown1 = [
@@ -567,20 +572,19 @@ export function AppointmentsTable({ data, functions }) {
     },
   ];
 
-  
-
   return (
     <table className="table-auto w-full">
       <thead className="bg-dry rounded-md overflow-hidden">
         <tr>
           <th className={thclass}>Id</th>
-          <th className={thclass}>Patient Id</th>
+          <th className={thclass}>Patient Name</th>
+          <th className={thclass}>Doctor Name</th>
+          <th className={thclass}>Clinic</th>
           <th className={thclass}>Date</th>
           <th className={thclass}>Start Time</th>
           <th className={thclass}>Duration</th>
           <th className={thclass}>Status</th>
           <th className={thclass}>Description</th>
-          <th className={thclass}>Doctor Id</th>
           <th className={thclass}>Actions</th>
         </tr>
       </thead>
@@ -588,10 +592,19 @@ export function AppointmentsTable({ data, functions }) {
         {data.map((appointment, index) => (
           <tr key={appointment.id} className="border-b border-border hover:bg-greyed transitions">
             <td className={tdclass}>{index + 1}</td> {/* Incremented index */}
-            <td className={tdclass}>{appointment.patient_id}</td> {/* Placeholder for Patient Name */}
-            <td className={tdclass}>{appointment.doctor_id}</td> {/* Placeholder for Doctor Name */}
-            <td className={tdclass}>{new Date(appointment.date).toLocaleDateString()}</td>
-            <td className={tdclass}>{appointment.start_time}</td>
+            <td className={tdclass}>{`${appointment.Patient.first_name} ${appointment.Patient.last_name}`}</td>
+            <td className={tdclass}>{`${appointment.Doctor.first_name} ${appointment.Doctor.last_name}`}</td>
+            <td className={tdclass}>{appointment.Clinic.name}</td>
+            <td className={tdclass}>{new Date(appointment.date).toLocaleDateString(undefined, {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
+            })}</td>
+            <td className={tdclass}>{new Date(appointment.start_time).toLocaleTimeString(undefined, {
+              hour: '2-digit',
+              minute: '2-digit',
+              hour12: false,
+            })}</td>
             <td className={tdclass}>{appointment.duration}</td>
             <td className={tdclass}>{appointment.status}</td>
             <td className={tdclass}>{appointment.description}</td>
@@ -608,6 +621,7 @@ export function AppointmentsTable({ data, functions }) {
     </table>
   );
 }
+
 
 
 // appointment table

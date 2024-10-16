@@ -23,5 +23,9 @@ module.exports = (sequelize, DataTypes) => {
     timestamps: true,
   });
 
-  return Clinic;
+  Clinic.associate = (models) => {
+    Clinic.hasMany(models.Appointment, { foreignKey: 'clinic_id' });
+  };
+
+return Clinic;
 };

@@ -7,10 +7,7 @@ router.post('/clinic', async (req, res) => {
   try {
     const { name, description, location, operating_hours } = req.body;
 
-    // Create the fullName by combining first and last name
-    //const fullName = `${firstName} ${lastName}`;
-
-    // Create the patient in the database
+    // Create the clinic in the database
     const newClinic = await Clinic.create({
       name, 
       description, 

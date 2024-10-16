@@ -7,13 +7,33 @@ import { HiOutlineCheckCircle } from 'react-icons/hi';
 import { toast } from 'react-hot-toast';
 import Access from '../Access';
 import Uploader from '../Uploader';
+import axios from 'axios';
 
 function AddDoctorModal({ closeModal, isOpen, doctor, datas }) {
   const [instraction, setInstraction] = useState(sortsDatas.title[0]);
   const [access, setAccess] = useState({});
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
+  
+  const onSubmit = async () => {
+    try {
+      const response = await axios.post('http://localhost:5000/api/doctor', {
+        first_name: firstName,
+        last_name: lastName,
+        email,
+        phone_number: phoneNumber,
+      });
 
-  const onSubmit = () => {
-    toast.error('This feature is not available yet');
+      if (response.status === 201) {
+        toast.success('Doctor created successfully');
+        //closeModal(); // Close the modal after success
+      }
+    } catch (error) {
+      toast.error('Error creating doctor');
+      console.log('Error creating doctor:', error);
+    }
   };
 
   return (
@@ -29,14 +49,15 @@ function AddDoctorModal({ closeModal, isOpen, doctor, datas }) {
       </div>
 
       <div className="flex-colo gap-6">
+
         <div className="grid sm:grid-cols-2 gap-4 w-full">
-          <Input label="First Name" color={true} placeholder="John" />
-          <Input label="Last Name" color={true} placeholder="Doe" />
+          <Input label="First Name" value={firstName} onChange={(e) => setFirstName(e.target.value)} color={true} placeholder="Enter first name" />
+          <Input label="Last Name" value={lastName} onChange={(e) => setLastName(e.target.value)} color={true} placeholder="Enter last name"/>
         </div>
 
         <div className="grid sm:grid-cols-2 gap-4 w-full">
-          <Input label="Email" color={true} />
-          <Input label="Phone Number" color={true} />
+          <Input label="Email" value={email} onChange={(e) => setEmail(e.target.value)} color={true} placeholder="Enter email" />
+          <Input label="Phone Number" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} color={true} placeholder="Enter phone number" /> 
         </div>
 
         {/* table access */}

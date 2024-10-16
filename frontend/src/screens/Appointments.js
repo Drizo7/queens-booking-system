@@ -7,26 +7,41 @@ import { Button, Select } from '../components/Form';
 import { AppointmentsTable } from '../components/Tables';
 import { sortsDatas } from '../components/Datas';
 import AddAppointmentModal from '../components/Modals/AddApointmentModal';
-
+import axios from 'axios';
 
 function Appointments() {
-  const [open, setOpen] = React.useState(false);
-  const [data, setData] = React.useState({});
+  const [open, setOpen] = useState(false);
+  const [data, setData] = useState({});
   const [status, setStatus] = useState(sortsDatas.stocks[0]);
   const [appointmentsData, setAppointmentsData] = useState([]);
 
-  // handle modal close
+  // Fetch appointments data from the API
+  const fetchAppointments = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/api/appointment');
+      setAppointmentsData(response.data); // Assuming API sends appointment details
+    } catch (error) {
+      toast.error('Failed to fetch appointments');
+    }
+  };
+
+  // Toggle modal for adding or editing appointments
   const handleClose = () => {
     setOpen(!open);
     setData({});
+    fetchAppointments();
   };
 
-
-  // onClick event handler
+  // Handle when an event (appointment) is clicked for editing
   const handleEventClick = (event) => {
     setData(event);
-    setOpen(!open);
+    setOpen(true);
   };
+
+  // Fetch appointments on component mount
+  useEffect(() => {
+    fetchAppointments();
+  }, []);
 
   return (
     <Layout>
@@ -34,9 +49,7 @@ function Appointments() {
         <AddAppointmentModal
           datas={data}
           isOpen={open}
-          closeModal={() => {
-            handleClose();
-          }}
+          closeModal={handleClose}
         />
       )}
       <button
@@ -45,7 +58,7 @@ function Appointments() {
       >
         <BiPlus className="text-2xl" />
       </button>
-{/*  */}
+
       <h1 className="text-xl font-semibold">Appointments List</h1>
       <div
         data-aos="fade-up"
@@ -54,8 +67,7 @@ function Appointments() {
         data-aos-offset="200"
         className="bg-white my-8 rounded-xl border-[1px] border-border p-5"
       >
-        {/* datas */}
-
+        {/* Filters and export */}
         <div className="grid md:grid-cols-6 grid-cols-1 gap-2">
           <div className="md:col-span-5 grid lg:grid-cols-4 xs:grid-cols-2 items-center gap-2">
             <input
@@ -74,7 +86,7 @@ function Appointments() {
             </Select>
           </div>
 
-          {/* export */}
+          {/* Export Button */}
           <Button
             label="Export"
             Icon={MdOutlineCloudDownload}
@@ -83,11 +95,12 @@ function Appointments() {
             }}
           />
         </div>
+
+        {/* Appointments Table */}
         <div className="mt-8 w-full overflow-x-scroll">
-          <AppointmentsTable data={appointmentsData} />
+          <AppointmentsTable data={appointmentsData} onEdit={handleEventClick} />
         </div>
       </div>
-      
     </Layout>
   );
 }

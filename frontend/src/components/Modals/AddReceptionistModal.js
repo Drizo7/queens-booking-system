@@ -1,18 +1,47 @@
 import React, { useState } from 'react';
 import Modal from './Modal';
-import { Button, Input, Select } from '../Form';
+import { Button, Input } from '../Form';
 import { sortsDatas } from '../Datas';
 import { HiOutlineCheckCircle } from 'react-icons/hi';
 import { toast } from 'react-hot-toast';
 import Access from '../Access';
 import Uploader from '../Uploader';
+import axios from 'axios';
 
 function AddReceptionistModal({ closeModal, isOpen, datas }) {
   const [instraction, setInstraction] = useState(sortsDatas.title[0]);
   const [access, setAccess] = useState({});
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [password, setPassword] = useState(''); // Include a password field for registration
 
-  const onSubmit = () => {
-    toast.error('This feature is not available yet');
+  const onSubmit = async () => {
+    try {
+      const response = await axios.post('http://localhost:5000/api/register', {
+        first_name: firstName,
+        last_name: lastName,
+        email,
+        phone_number: phoneNumber,
+        password,
+        role: 'receptionist', // Explicitly set role as receptionist
+      });
+
+      if (response.status === 201) {
+        toast.success('Receptionist created successfully');
+        //closeModal(); // Close the modal after success
+      }
+    } catch (error) {
+      toast.error('Error creating receptionist');
+      console.log('Error creating receptionist:', error);
+
+  // Optionally, log specific error details if you want to see more context
+  if (error.response) {
+    console.log('Response data:', error.response.data);
+    console.log('Response status:', error.response.status);
+  }
+    }
   };
 
   return (
@@ -29,13 +58,16 @@ function AddReceptionistModal({ closeModal, isOpen, datas }) {
 
       <div className="flex-colo gap-6">
         <div className="grid sm:grid-cols-2 gap-4 w-full">
-          <Input label="First Name" color={true} placeholder="John" />
-          <Input label="Last Name" color={true} placeholder="Doe" />
+          <Input label="First Name" value={firstName} onChange={(e) => setFirstName(e.target.value)} color={true} placeholder="Enter first name" />
+          <Input label="Last Name" value={lastName} onChange={(e) => setLastName(e.target.value)} color={true} placeholder="Enter last name"/>
         </div>
 
         <div className="grid sm:grid-cols-2 gap-4 w-full">
-          <Input label="Email" color={true} />
-          <Input label="Phone Number" color={true} />
+          <Input label="Email" value={email} onChange={(e) => setEmail(e.target.value)} color={true} placeholder="Enter email" />
+          <Input label="Phone Number" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} color={true} placeholder="Enter phone number" /> 
+        </div>
+        <div className="grid sm:grid-cols-1 gap-4 w-full">
+          <Input label="Password" value={password} type="password" onChange={(e) => setPassword(e.target.value)} color={true} placeholder="********"/>
         </div>
 
 
