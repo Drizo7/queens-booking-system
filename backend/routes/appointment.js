@@ -28,6 +28,7 @@ router.post('/appointment', async (req, res) => {
 router.get('/appointment', async (req, res) => {
   try {
     const appointments = await Appointment.findAll({
+      where: { deletedAt: null },
       include: [
         { model: Patient, attributes: ['first_name', 'last_name'] }, // Include patient name
         { model: Doctor, attributes: ['first_name', 'last_name'] },  // Include doctor name

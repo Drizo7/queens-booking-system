@@ -32,6 +32,7 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: 'patient', // Default role is 'patient' (can be 'doctor', 'receptionist', etc.)
     },
   }, {
+    paranoid: true,
     timestamps: true, // Automatically adds 'createdAt' and 'updatedAt' fields
   });
 

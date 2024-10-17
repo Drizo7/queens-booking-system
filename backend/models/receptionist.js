@@ -23,6 +23,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     },
   }, {
+    paranoid: true,
     timestamps: true,
   });
 
