@@ -19,7 +19,7 @@ function Appointments() {
   const fetchAppointments = async () => {
     try {
       const response = await axios.get('http://localhost:5000/api/appointment');
-      setAppointmentsData(response.data); // Assuming API sends appointment details
+      setAppointmentsData(response.data.appointments); // Assuming API sends appointment details
     } catch (error) {
       toast.error('Failed to fetch appointments');
     }

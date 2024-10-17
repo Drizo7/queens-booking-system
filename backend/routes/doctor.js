@@ -29,7 +29,8 @@ router.post('/doctor', async (req, res) => {
 router.get('/doctor', async (req, res) => {
   try {
     const doctors = await Doctor.findAll(); // assuming you are using Sequelize
-    res.json(doctors);
+    const count = await Doctor.count(); // Get the total count
+    res.json({ doctors, count });
   } catch (error) {
     res.status(500).json({ error: 'Server error' });
   }

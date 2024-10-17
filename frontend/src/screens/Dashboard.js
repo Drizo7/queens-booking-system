@@ -1,20 +1,17 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { toast } from 'react-hot-toast';
 import Layout from '../Layout';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
-import { BiChevronLeft, BiChevronRight, BiPlus, BiTime } from 'react-icons/bi';
+import { TbCalendar, TbUserHeart, TbUsers } from 'react-icons/tb';
+import { MdOutlineInventory2 } from 'react-icons/md';
+import { BiChevronLeft, BiChevronRight, BiTime } from 'react-icons/bi';
 import { HiOutlineViewGrid } from 'react-icons/hi';
 import { HiOutlineCalendarDays } from 'react-icons/hi2';
-import { servicesData } from '../components/Datas';
-import {
-  BsArrowDownLeft,
-  BsArrowDownRight,
-  BsArrowUpRight,
-} from 'react-icons/bs';
+import { BsArrowDownLeft, BsArrowDownRight, BsArrowUpRight,} from 'react-icons/bs';
 import { DashboardSmallChart } from '../components/Charts';
-import {
-  dashboardCards,
-} from '../components/Datas';
+
 // custom toolbar
 const CustomToolbar = (toolbar) => {
   // today button handler
@@ -119,6 +116,31 @@ function Dashboard() {
   const localizer = momentLocalizer(moment);
   const [open, setOpen] = React.useState(false);
   const [data, setData] = React.useState({});
+  const [events, setEvents] = useState([]);
+  const [totalPatients, setTotalPatients] = useState(0);
+  const [totalDoctors, setTotalDoctors] = useState(0);
+  const [totalAppointments, setTotalAppointments] = useState(0);
+  const [totalClinics, setTotalClinics] = useState(0);
+
+  // Fetching data from API
+  const fetchDashboardData = async () => {
+    try {
+      const [patientsRes, doctorsRes, appointmentsRes, clinicsRes] = await Promise.all([
+        axios.get('http://localhost:5000/api/patient'),
+        axios.get('http://localhost:5000/api/doctor'),
+        axios.get('http://localhost:5000/api/appointment'),
+        axios.get('http://localhost:5000/api/clinic')
+      ]);
+
+      setTotalPatients(patientsRes.data.count);
+      setTotalDoctors(doctorsRes.data.count);
+      setTotalAppointments(appointmentsRes.data.count);
+      setTotalClinics(clinicsRes.data.count);
+    } catch (error) {
+      toast.error('Failed to fetch dashboard data');
+    }
+  };
+
 
   // handle modal close
   const handleClose = () => {
@@ -126,57 +148,78 @@ function Dashboard() {
     setData({});
   };
 
-  const events = [
-    {
-      id: 0,
-      start: moment({ hours: 7 }).toDate(),
-      end: moment({ hours: 9 }).toDate(),
-      color: '#FB923C',
-      title: 'John Doe',
-      message: 'He is not sure about the time',
-      service: servicesData[1],
-      shareData: {
-        email: true,
-        sms: true,
-        whatsapp: false,
-      },
-    },
-    {
-      id: 1,
-      start: moment({ hours: 12 }).toDate(),
-      end: moment({ hours: 13 }).toDate(),
-      color: '#FC8181',
-      title: 'Minah Mmassy',
-      message: 'She is coming for checkup',
-      service: servicesData[2],
-      shareData: {
-        email: false,
-        sms: true,
-        whatsapp: false,
-      },
-    },
+  const fetchAppointments = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/api/appointment'); // Update with your API endpoint
+        const appointments = response.data.appointments;
 
-    {
-      id: 2,
-      start: moment({ hours: 14 }).toDate(),
-      end: moment({ hours: 17 }).toDate(),
-      color: '#FFC107',
-      title: 'Irene P. Smith',
-      message: 'She is coming for checkup. but she is not sure about the time',
-      service: servicesData[3],
-      shareData: {
-        email: true,
-        sms: true,
-        whatsapp: true,
-      },
-    },
-  ];
+        // Map the fetched appointments to match Calendar's event format
+        const formattedEvents = appointments.map((appointment) => ({
+          id: appointment.id,
+          title: `${appointment.Patient.first_name} ${appointment.Patient.last_name}`, // assuming patient data
+          start: new Date(appointment.date), // or appointment.start_time
+          end: new Date(new Date(appointment.date).getTime() + appointment.duration * 60000), // Calculate end time using duration
+          color: '#66B5A3', // default color, can be dynamic
+        }));
+
+        setEvents(formattedEvents); // Update the state with formatted events
+      } catch (error) {
+        console.error('Error fetching appointments:', error);
+      }
+    };
+  // Fetch appointments from API when component mounts
+  useEffect(() => {
+    fetchDashboardData();
+    fetchAppointments();
+  }, []); // Empty dependency array ensures it runs on mount
 
   // onClick event handler
   const handleEventClick = (event) => {
     setData(event);
     setOpen(!open);
   };
+
+  const dashboardCards = [
+    {
+      id: 1,
+      title: 'Total Patients',
+      icon: TbUsers,
+      value: totalPatients,
+      percent: 45.06,
+      color: ['bg-subMain', 'text-subMain', '#66B5A3'],
+      datas: [92, 80, 45, 15, 49, 77, 70, 51, 110, 20, 90, 60],
+    },
+    {
+      id: 2,
+      title: 'Total Doctors',
+      icon: TbUserHeart,
+      value: totalDoctors,
+      percent: 25.06,
+      color: ['bg-green-500', 'text-green-500', '#34C759'],
+      datas: [92, 80, 45, 15, 49, 77, 70, 51, 110, 20, 90, 60],
+    },
+    {
+      id: 3,
+      title: 'Appointments',
+      icon: TbCalendar,
+      value: totalAppointments,
+      percent: 25.06,
+      color: ['bg-yellow-500', 'text-yellow-500', '#F9C851'],
+      datas: [20, 30, 45, 55, 60, 65, 70, 41, 50, 20, 20, 30],
+    },
+    {
+      id: 4,
+      title: 'Clinics',
+      icon: MdOutlineInventory2,
+      value: totalClinics,
+      percent: 45.06,
+      color: ['bg-red-500', 'text-red-500', '#FF3B30'],
+      datas: [20, 50, 75, 15, 108, 97, 70, 41, 50, 20, 90, 60],
+    },
+  ];
+
+  const colors = ['#66B5A3', '#FC8181', '#FFD700', '#3B82F6', '#F87171'];
+
   return (
     <Layout>
       {/* boxes */}
@@ -222,11 +265,10 @@ function Dashboard() {
       </div>
       <Calendar
         localizer={localizer}
-        events={events}
+        events={events} // Use the dynamic events here
         startAccessor="start"
         endAccessor="end"
         style={{
-          // height fix screen
           height: 900,
           marginBottom: 50,
         }}
@@ -236,37 +278,28 @@ function Dashboard() {
         resizable
         step={60}
         selectable={true}
-        // custom event style
         eventPropGetter={(event) => {
+          // Get a color based on the event ID (cyclical assignment)
+          const color = colors[event.id % colors.length];
           const style = {
-            backgroundColor: '#66B5A3',
-
+            backgroundColor: color, // default or dynamic color
             borderRadius: '10px',
             color: 'white',
             border: '1px',
-            borderColor: '#F2FAF8',
             fontSize: '12px',
             padding: '5px 5px',
           };
-          return {
-            style,
-          };
+          return { style };
         }}
-        // custom date style
         dayPropGetter={(date) => {
           const backgroundColor = 'white';
-          const style = {
-            backgroundColor,
-          };
-          return {
-            style,
-          };
+          const style = { backgroundColor };
+          return { style };
         }}
-        // remove agenda view
         views={['month', 'day', 'week']}
-        // toolbar={false}
         components={{ toolbar: CustomToolbar }}
       />
+
     </Layout>
   );
 }

@@ -17,7 +17,7 @@ function Doctors() {
   const fetchDoctors = async () => {
     try {
       const response = await axios.get('http://localhost:5000/api/doctor');
-      setDoctorData(response.data); // Assuming API sends doctor details
+      setDoctorData(response.data.doctors); // Assuming API sends doctor details
     } catch (error) {
       toast.error('Failed to fetch doctors');
     }

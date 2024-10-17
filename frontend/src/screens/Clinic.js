@@ -13,12 +13,14 @@ function Clinic() {
   const [isOpen, setIsOpen] = useState(false);
   const [status, setStatus] = useState(sortsDatas.stocks[0]);
   const [clinicsData, setClinicsData] = useState([]);
+  const [clinicsCount, setClinicsCount] = useState(0);
 
   // Function to fetch clinic data from API
   const fetchClinics = async () => {
     try {
       const response = await axios.get('http://localhost:5000/api/clinic');
-      setClinicsData(response.data);
+      setClinicsData(response.data.clinics);   // Now response.data contains clinics and count
+      setClinicsCount(response.data.count);
     } catch (error) {
       toast.error('Failed to fetch clinics');
     }
@@ -56,7 +58,7 @@ function Clinic() {
         <BiPlus className="text-2xl" />
       </button>
       {/*  */}
-      <h1 className="text-xl font-semibold">Clinics</h1>
+      <h1 className="text-xl font-semibold">Total Clinics {clinicsCount}</h1>
       <div
         data-aos="fade-up"
         data-aos-duration="1000"

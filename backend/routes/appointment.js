@@ -34,7 +34,8 @@ router.get('/appointment', async (req, res) => {
         { model: Clinic, attributes: ['name'] }  // Include clinic name
       ]
     });
-    res.json(appointments);
+    const count = await Appointment.count(); // Get the total count
+    res.json({ appointments, count });
   } catch (error) {
     console.error('Error fetching appointments:', error); // Log the actual error
     res.status(500).json({ error: 'Failed to fetch appointments' });
