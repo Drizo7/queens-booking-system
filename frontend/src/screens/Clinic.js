@@ -7,20 +7,21 @@ import { Button, Select } from '../components/Form';
 import { ClinicTable } from '../components/Tables';
 import { sortsDatas } from '../components/Datas';
 import AddEditClinicModal from '../components/Modals/AddEditClinic';
+import EditClinicModal from '../components/Modals/EditClinicModal';
 import axios from 'axios';
 
 function Clinic() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isEditOpen, setIsEditOpen] = useState(false);
   const [status, setStatus] = useState(sortsDatas.stocks[0]);
   const [clinicsData, setClinicsData] = useState([]);
-  const [clinicsCount, setClinicsCount] = useState(0);
+  const [selectedClinic, setSelectedClinic] = useState(null); // Added state for selected clinic
 
   // Function to fetch clinic data from API
   const fetchClinics = async () => {
     try {
       const response = await axios.get('http://localhost:5000/api/clinic');
-      setClinicsData(response.data.clinics);   // Now response.data contains clinics and count
-      setClinicsCount(response.data.count);
+      setClinicsData(response.data.clinics);   
     } catch (error) {
       toast.error('Failed to fetch clinics');
     }
@@ -31,9 +32,28 @@ function Clinic() {
     fetchClinics(); // Call fetchClinics when the modal closes
   };
 
-  const onEdit = (datas) => {
-    setIsOpen(true);
-    // You might want to set the data to be edited here if needed
+  const onCloseEditModal = () => {
+    setIsEditOpen(false);
+    fetchClinics(); // Call fetchClinics when the modal closes
+  };
+
+  const onEdit = (clinic) => {
+    setSelectedClinic(clinic); // Set the clinic to be edited
+    setIsEditOpen(true); // Open the modal
+  };
+
+  const handleDeleteClinic = async (clinic) => {
+    if (window.confirm(`Are you sure you want to delete the clinic: ${clinic.name}?`)) {
+      try {
+        await axios.delete(`http://localhost:5000/api/clinic/${clinic.id}`);
+        toast.success('Clinic deleted successfully');
+        // Optionally refresh the clinic list after deletion
+        fetchClinics(); // Assuming you have a function to re-fetch clinic data
+      } catch (error) {
+        toast.error('Failed to delete clinic');
+        console.error('Error deleting clinic:', error);
+      }
+    }
   };
 
   // Fetch clinics when the component mounts
@@ -47,7 +67,13 @@ function Clinic() {
         <AddEditClinicModal
           isOpen={isOpen}
           closeModal={onCloseModal}
-          
+        />
+      )}
+      {isEditOpen && (
+        <EditClinicModal
+          isOpen={isEditOpen}
+          closeModal={onCloseEditModal}
+          clinic={selectedClinic} // Pass the selected clinic data for editing
         />
       )}
       {/* add button */}
@@ -57,8 +83,7 @@ function Clinic() {
       >
         <BiPlus className="text-2xl" />
       </button>
-      {/*  */}
-      <h1 className="text-xl font-semibold">Total Clinics {clinicsCount}</h1>
+      <h1 className="text-xl font-semibold">Clinics</h1>
       <div
         data-aos="fade-up"
         data-aos-duration="1000"
@@ -66,8 +91,6 @@ function Clinic() {
         data-aos-offset="200"
         className="bg-white my-8 rounded-xl border-[1px] border-border p-5"
       >
-        {/* datas */}
-
         <div className="grid md:grid-cols-6 grid-cols-1 gap-2">
           <div className="md:col-span-5 grid lg:grid-cols-4 xs:grid-cols-2 items-center gap-2">
             <input
@@ -85,8 +108,6 @@ function Clinic() {
               </div>
             </Select>
           </div>
-
-          {/* export */}
           <Button
             label="Export"
             Icon={MdOutlineCloudDownload}
@@ -96,7 +117,7 @@ function Clinic() {
           />
         </div>
         <div className="mt-8 w-full overflow-x-scroll">
-          <ClinicTable data={clinicsData} onEdit={onEdit} />
+          <ClinicTable data={clinicsData} onEdit={onEdit} OnDelete={handleDeleteClinic}/>
         </div>
       </div>
     </Layout>

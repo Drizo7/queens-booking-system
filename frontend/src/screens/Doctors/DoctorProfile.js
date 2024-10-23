@@ -1,40 +1,56 @@
-import React from 'react';
+import React, { useState , useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import axios from 'axios';
 import Layout from '../../Layout';
-import PersonalInfo from '../../components/UsedComp/PersonalInfo';
-import ChangePassword from '../../components/UsedComp/ChangePassword';
+import DoctorInfo from '../../components/UsedComp/DoctorInfo';
 import { Link } from 'react-router-dom';
 import { IoArrowBackOutline } from 'react-icons/io5';
-import PatientsUsed from '../../components/UsedComp/PatientsUsed';
 import AppointmentsUsed from '../../components/UsedComp/AppointmentsUsed';
 import { doctorTab } from '../../components/Datas';
-import PaymentsUsed from '../../components/UsedComp/PaymentUsed';
-import InvoiceUsed from '../../components/UsedComp/InvoiceUsed';
-import Access from '../../components/Access';
 
 function DoctorProfile() {
   const [activeTab, setActiveTab] = React.useState(1);
-  const [access, setAccess] = React.useState({});
+  const { id } = useParams(); // Get doctor ID from the URL
+  const [doctor, setDoctor] = useState(null); // State to store doctor data
+
+  useEffect(() => {
+  const fetchDoctor = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/api/doctor'); // Fetch all doctors
+      const doctors = response.data.doctors;
+      // Find the doctor with the matching ID
+      const selectedDoctor = doctors.find((doc) => doc.id === id);
+      if (selectedDoctor) {
+        setDoctor(selectedDoctor);
+      } else {
+        console.error('Doctor not found');
+      }
+    } catch (error) {
+      console.error('Failed to fetch doctors:', error);
+    }
+  };
+
+  fetchDoctor();
+}, [id]);
+
+// Function to update the doctor data
+  const updateDoctor = (updatedData) => {
+    setDoctor(updatedData);
+  };
 
   const tabPanel = () => {
     switch (activeTab) {
       case 1:
-        return <PersonalInfo titles={true} />;
+        return <DoctorInfo doctor={doctor} onUpdate={updateDoctor} />;
       case 2:
-        return <PatientsUsed />;
-      case 3:
         return <AppointmentsUsed doctor={true} />;
-      case 4:
-        return <PaymentsUsed doctor={true} />;
-      case 5:
-        return <InvoiceUsed />;
-      case 6:
-        return <Access setAccess={setAccess} />;
-      case 7:
-        return <ChangePassword />;
+    
       default:
         return;
     }
   };
+
+ 
 
   return (
     <Layout>
@@ -45,7 +61,7 @@ function DoctorProfile() {
         >
           <IoArrowBackOutline />
         </Link>
-        <h1 className="text-xl font-semibold">Dr. Adrian Kadya</h1>
+        <h1 className="text-xl font-semibold">{doctor ? `Dr. ${doctor.first_name} ${doctor.last_name}` : 'Doctor'}</h1>
       </div>
       <div className=" grid grid-cols-12 gap-6 my-8 items-start">
         <div
@@ -61,9 +77,10 @@ function DoctorProfile() {
             className="w-40 h-40 rounded-full object-cover border border-dashed border-subMain"
           />
           <div className="gap-2 flex-colo">
-            <h2 className="text-sm font-semibold">Dr. Adrian Kadya</h2>
-            <p className="text-xs text-textGray">adriankadya@gmail.com</p>
-            <p className="text-xs">+265 999 345 678</p>
+            <h2 className="text-sm font-semibold">{doctor ? `Dr. ${doctor.first_name} ${doctor.last_name}` : 'Doctor Name'}
+            </h2>
+            <p className="text-xs text-textGray">{doctor ? doctor.email : 'doctor@example.com'}</p>
+            <p className="text-xs">{doctor ? doctor.phone_number : '+265 999 345 678'}</p>
           </div>
           {/* tabs */}
           <div className="flex-colo gap-3 px-2 2xl:px-12 w-full">

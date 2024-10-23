@@ -7,13 +7,15 @@ import { Button, Select } from '../components/Form';
 import { AppointmentsTable } from '../components/Tables';
 import { sortsDatas } from '../components/Datas';
 import AddAppointmentModal from '../components/Modals/AddApointmentModal';
+import EditAppointmentModal from '../components/Modals/EditAppointmentModal';
 import axios from 'axios';
 
 function Appointments() {
   const [open, setOpen] = useState(false);
-  const [data, setData] = useState({});
+  const [isEditOpen, setIsEditOpen] = useState(false);
   const [status, setStatus] = useState(sortsDatas.stocks[0]);
   const [appointmentsData, setAppointmentsData] = useState([]);
+  const [selectedAppointment, setSelectedAppointment] = useState(null); 
 
   // Fetch appointments data from the API
   const fetchAppointments = async () => {
@@ -28,14 +30,18 @@ function Appointments() {
   // Toggle modal for adding or editing appointments
   const handleClose = () => {
     setOpen(!open);
-    setData({});
     fetchAppointments();
   };
 
+  const onCloseEditModal = () => {
+    setIsEditOpen(false);
+    fetchAppointments(); // Call fetchAppointments when the modal closes
+  };
+
   // Handle when an event (appointment) is clicked for editing
-  const handleEventClick = (event) => {
-    setData(event);
-    setOpen(true);
+  const onEdit = (appointment) => {
+    setSelectedAppointment(appointment); // Set the appointment to be edited
+    setIsEditOpen(true); // Open the modal
   };
 
   // Fetch appointments on component mount
@@ -47,9 +53,15 @@ function Appointments() {
     <Layout>
       {open && (
         <AddAppointmentModal
-          datas={data}
           isOpen={open}
           closeModal={handleClose}
+        />
+      )}
+      {isEditOpen && (
+        <EditAppointmentModal
+          isOpen={isEditOpen}
+          closeModal={onCloseEditModal}
+          appointment={selectedAppointment} // Pass the selected appointment data for editing
         />
       )}
       <button
@@ -98,7 +110,7 @@ function Appointments() {
 
         {/* Appointments Table */}
         <div className="mt-8 w-full overflow-x-scroll">
-          <AppointmentsTable data={appointmentsData} onEdit={handleEventClick} />
+          <AppointmentsTable data={appointmentsData} onEdit={onEdit} />
         </div>
       </div>
     </Layout>

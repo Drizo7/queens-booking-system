@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import { MdOutlineCloudDownload } from 'react-icons/md';
 import { toast } from 'react-hot-toast';
-import { BiChevronDown, BiPlus } from 'react-icons/bi';
+import { BiPlus } from 'react-icons/bi';
 import Layout from '../../Layout';
 import { Button } from '../../components/Form';
 import { DoctorsTable } from '../../components/Tables';
@@ -92,12 +92,7 @@ function Doctors() {
           />
         </div>
         <div className="mt-8 w-full overflow-x-scroll">
-          <DoctorsTable
-            doctor={true}
-            data={doctorData}
-            functions={{
-              preview: preview,
-            }}
+          <DoctorsTable doctor={true} data={doctorData} functions={{ preview: preview, }}
           />
         </div>
       </div>

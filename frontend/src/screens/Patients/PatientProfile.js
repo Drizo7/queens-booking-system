@@ -1,38 +1,50 @@
-import React from 'react';
+import React, { useState , useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import axios from 'axios';
 import Layout from '../../Layout';
 import { patientTab } from '../../components/Datas';
 import { Link } from 'react-router-dom';
 import { IoArrowBackOutline } from 'react-icons/io5';
-import MedicalRecord from './MedicalRecord';
 import AppointmentsUsed from '../../components/UsedComp/AppointmentsUsed';
-import InvoiceUsed from '../../components/UsedComp/InvoiceUsed';
-import PaymentsUsed from '../../components/UsedComp/PaymentUsed';
-import PersonalInfo from '../../components/UsedComp/PersonalInfo';
-import PatientImages from './PatientImages';
-import HealthInfomation from './HealthInfomation';
-import DentalChart from './DentalChart';
+import PatientInfo from '../../components/UsedComp/PatientInfo';
 
 function PatientProfile() {
   const [activeTab, setActiveTab] = React.useState(1);
+  const { id } = useParams(); // Get patient ID from the URL
+  const [patient, setPatient] = useState(null); // State to store patient data
+
+  useEffect(() => {
+  const fetchPatient = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/api/patient'); // Fetch all patients
+      const patients = response.data.patients;
+      // Find the patient with the matching ID
+      const selectedPatient = patients.find((pat) => pat.id === id);
+      if (selectedPatient) {
+        setPatient(selectedPatient);
+      } else {
+        console.error('Patient not found');
+      }
+    } catch (error) {
+      console.error('Failed to fetch patients:', error);
+    }
+  };
+
+  fetchPatient();
+}, [id]);
+
+// Function to update the patient data
+  const updatePatient = (updatedData) => {
+    setPatient(updatedData);
+  };
+
 
   const tabPanel = () => {
     switch (activeTab) {
       case 1:
-        return <MedicalRecord />;
+        return <PatientInfo patient={patient} onUpdate={updatePatient} />;
       case 2:
         return <AppointmentsUsed doctor={false} />;
-      case 3:
-        return <InvoiceUsed />;
-      case 4:
-        return <PaymentsUsed doctor={false} />;
-      case 5:
-        return <PatientImages />;
-      case 6:
-        return <DentalChart />;
-      case 7:
-        return <PersonalInfo titles={false} />;
-      case 8:
-        return <HealthInfomation />;
       default:
         return;
     }
@@ -47,7 +59,7 @@ function PatientProfile() {
         >
           <IoArrowBackOutline />
         </Link>
-        <h1 className="text-xl font-semibold">Amani Mmassy</h1>
+        <h1 className="text-xl font-semibold">{patient ? `${patient.first_name} ${patient.last_name}` : 'Patient'}</h1>
       </div>
       <div className=" grid grid-cols-12 gap-6 my-8 items-start">
         <div
@@ -63,9 +75,9 @@ function PatientProfile() {
             className="w-40 h-40 rounded-full object-cover border border-dashed border-subMain"
           />
           <div className="gap-2 flex-colo">
-            <h2 className="text-sm font-semibold">Amani Mmassy</h2>
-            <p className="text-xs text-textGray">amanimmassy@gmail.com</p>
-            <p className="text-xs">+254 712 345 678</p>
+            <h2 className="text-sm font-semibold">{patient ? `${patient.first_name} ${patient.last_name}` : 'Patient Name'}</h2>
+            <p className="text-xs text-textGray">{patient ? patient.email : 'patient@example.com'}</p>
+            <p className="text-xs">{patient ? patient.phone_number : '+265 999 345 678'}</p>
           </div>
           {/* tabs */}
           <div className="flex-colo gap-3 px-2 xl:px-12 w-full">

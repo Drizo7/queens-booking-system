@@ -8,11 +8,11 @@ import {
   Select,
   TimePickerComp,
 } from '../Form';
-import { BiChevronDown, BiPlus } from 'react-icons/bi';
+import { BiChevronDown } from 'react-icons/bi';
 import { HiOutlineCheckCircle } from 'react-icons/hi';
 import { toast } from 'react-hot-toast';
 
-function AddAppointmentModal({ closeModal, isOpen, datas }) {
+function AddAppointmentModal({ closeModal, isOpen }) {
   const [startDate, setStartDate] = useState(new Date());
   const [startTime, setStartTime] = useState(new Date());
   const [duration, setDuration] = useState(''); // Added for Duration

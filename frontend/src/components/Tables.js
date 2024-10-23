@@ -256,20 +256,21 @@ export function MedicineTable({ data, onEdit }) {
 }
 
 // clinic table
-export function ClinicTable({ data, onEdit }) {
+export function ClinicTable({ data, onEdit, OnDelete }) {
   const DropDown1 = [
     {
       title: 'Edit',
       icon: FiEdit,
       onClick: (item) => {
+        console.log("Selected Clinic: ", item);
         onEdit(item);
       },
     },
     {
       title: 'Delete',
       icon: RiDeleteBin6Line,
-      onClick: () => {
-        toast.error('This feature is not available yet');
+      onClick: (item) => {
+        OnDelete(item);
       },
     },
   ];
@@ -554,13 +555,13 @@ export function DoctorsTable({ data, functions }) {
 }
 
 // appointments table
-export function AppointmentsTable({ data, functions }) {
+export function AppointmentsTable({ data, onEdit }) {
   const DropDown1 = [
     {
-      title: 'View',
+      title: 'Edit',
       icon: FiEye,
       onClick: (item) => {
-        functions.preview(item.id);
+        onEdit(item);
       },
     },
     {
@@ -589,27 +590,29 @@ export function AppointmentsTable({ data, functions }) {
         </tr>
       </thead>
       <tbody>
-        {data.map((appointment, index) => (
-          <tr key={appointment.id} className="border-b border-border hover:bg-greyed transitions">
+        {data.map((item, index) => (
+          <tr key={item.id} className="border-b border-border hover:bg-greyed transitions">
             <td className={tdclass}>{index + 1}</td> {/* Incremented index */}
-            <td className={tdclass}>{`${appointment.Patient.first_name} ${appointment.Patient.last_name}`}</td>
-            <td className={tdclass}>{`${appointment.Doctor.first_name} ${appointment.Doctor.last_name}`}</td>
-            <td className={tdclass}>{appointment.Clinic.name}</td>
-            <td className={tdclass}>{new Date(appointment.date).toLocaleDateString(undefined, {
+            <td className={tdclass}>{`${item.Patient.first_name} ${item.Patient.last_name}`}</td>
+            <td className={tdclass}>{`${item.Doctor.first_name} ${item.Doctor.last_name}`}</td>
+            <td className={tdclass}>
+              {item.Clinic ? item.Clinic.name : <span className="text-red-500">Deleted Clinic</span>}
+            </td>
+            <td className={tdclass}>{new Date(item.date).toLocaleDateString(undefined, {
               year: 'numeric',
               month: 'long',
               day: 'numeric',
             })}</td>
-            <td className={tdclass}>{new Date(appointment.start_time).toLocaleTimeString(undefined, {
+            <td className={tdclass}>{new Date(item.start_time).toLocaleTimeString(undefined, {
               hour: '2-digit',
               minute: '2-digit',
               hour12: false,
             })}</td>
-            <td className={tdclass}>{appointment.duration}</td>
-            <td className={tdclass}>{appointment.status}</td>
-            <td className={tdclass}>{appointment.description}</td>
+            <td className={tdclass}>{item.duration}</td>
+            <td className={tdclass}>{item.status}</td>
+            <td className={tdclass}>{item.description}</td>
             <td className={tdclass}>
-              <MenuSelect datas={DropDown1} appointment={appointment}>
+              <MenuSelect datas={DropDown1} item={item}>
                 <div className="bg-dry border text-main text-xl py-2 px-4 rounded-lg">
                   <BiDotsHorizontalRounded />
                 </div>

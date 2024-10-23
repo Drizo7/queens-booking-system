@@ -1049,15 +1049,15 @@ export const medicineData = [
 export const patientTab = [
   {
     id: 1,
-    title: 'Medical Records',
-    icon: TbChartHistogram,
+    title: 'Patient Information',
+    icon: RiUserLine,
   },
   {
     id: 2,
     title: 'Appointments',
     icon: BiCalendar,
   },
-  {
+  /* {
     id: 3,
     title: 'Invoices',
     icon: RiFileList3Line,
@@ -1077,16 +1077,12 @@ export const patientTab = [
     title: 'Dental Chart',
     icon: RiStethoscopeLine,
   },
-  {
-    id: 7,
-    title: 'Patient Information',
-    icon: RiUserLine,
-  },
+  
   {
     id: 8,
     title: 'Health Information',
     icon: RiHeartLine,
-  },
+  }, */
 ];
 
 export const doctorTab = [
@@ -1097,13 +1093,13 @@ export const doctorTab = [
   },
   {
     id: 2,
-    title: 'Patients',
-    icon: BiUserPlus,
-  },
-  {
-    id: 3,
     title: 'Appointments',
     icon: BiCalendar,
+  },
+  /* {
+    id: 3,
+    title: 'Patients',
+    icon: BiUserPlus,
   },
   {
     id: 4,
@@ -1124,7 +1120,7 @@ export const doctorTab = [
     id: 7,
     title: 'Change Password',
     icon: RiLockPasswordLine,
-  },
+  }, */
 ];
 
 export const medicalRecodData = [

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState , useEffect } from 'react';
 import axios from 'axios';
 import Uploder from '../Uploader';
 import { sortsDatas } from '../Datas';
@@ -8,7 +8,7 @@ import { toast } from 'react-hot-toast';
 import { HiOutlineCheckCircle } from 'react-icons/hi';
 import { RiDeleteBin5Line } from 'react-icons/ri';
 
-function PersonalInfo({ titles }) {
+function PatientInfo({ patient , onUpdate }) {
   const [first_name, setFirstName] = useState('');
   const [last_name, setLastName] = useState('');
   const [phone_number, setPhoneNumber] = useState('');
@@ -18,14 +18,37 @@ function PersonalInfo({ titles }) {
   const [address, setAddress] = useState('');
   const [errors, setErrors] = useState({});
 
+  // Populate form fields when editing
+  useEffect(() => {
+    if (patient) {
+      setFirstName(patient.first_name);
+      setLastName(patient.last_name);
+      setPhoneNumber(patient.phone_number);
+      setEmail(patient.email);
+      setDateOfBirth(patient.date_of_birth ? new Date(patient.date_of_birth) : new Date());
+      setGender(sortsDatas.genderFilter.find(g => g.name === patient.gender) || sortsDatas.genderFilter[0]); // Dynamically set gender
+      setAddress(patient.address);
+    } else {
+      // If no patient is provided, reset the form (for creating a new patient)
+      setFirstName('');
+      setLastName('');
+      setPhoneNumber('');
+      setEmail('');
+      setDateOfBirth('');
+      setGender('');
+      setAddress('');
+    }
+  }, [patient]);
+
+
   const validateForm = () => {
     const newErrors = {};
 
     if (!first_name.trim()) {
-      newErrors.firstName = 'First Name is required';
+      newErrors.first_name = 'First Name is required';
     }
     if (!last_name.trim()) {
-      newErrors.lastName = 'Last Name is required';
+      newErrors.last_name = 'Last Name is required';
     }
     if (!phone_number.trim()) {
       newErrors.phoneNumber = 'Phone Number is required';
@@ -38,6 +61,7 @@ function PersonalInfo({ titles }) {
     if (!address.trim()) {
       newErrors.address = 'Address is required';
     }
+    
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -50,40 +74,53 @@ function PersonalInfo({ titles }) {
     }
 
     try {
-      const response = await axios.post('http://localhost:5000/api/patient', {
-        first_name,
-        last_name,
-        gender: gender.name,
-        date_of_birth,
-        email,
-        phone_number,
-        address,
-      });
+      // If a patient is passed, we update; otherwise, we create a new patient
+      if (patient) {
+        const response = await axios.put(`http://localhost:5000/api/patient/${patient.id}`, {
+            first_name,
+            last_name,
+            gender: gender.name,
+            date_of_birth,
+            email,
+            phone_number,
+            address,
+        });
 
-      if (response.status === 201) {
-        toast.success('Patient created successfully');
-        // Reset form after successful submission
-        setFirstName('');
-        setLastName('');
-        setPhoneNumber('');
-        setEmail('');
-        setAddress('');
-        setGender(sortsDatas.genderFilter[0]);
-        setDateOfBirth(new Date());
+
+        if (response.status === 200) {
+          toast.success('Patient record updated successfully');
+          const response = await axios.get('http://localhost:5000/api/patient'); // Fetch all patients
+            const patients = response.data.patients;
+            // Find the patient with the matching ID
+            const selectedPatient = patients.find((pat) => pat.id === patient.id);
+            if (selectedPatient) {
+                onUpdate(selectedPatient);
+            } else {
+                console.error('Patient not found');
+            }
+          
+        }
+      } else {
+        // Create new patient if no patient is passed (for add functionality)
+        const response = await axios.post('http://localhost:5000/api/patient', {
+            first_name,
+            last_name,
+            gender: gender.name,
+            date_of_birth,
+            email,
+            phone_number,
+            address,
+        });
+
+        if (response.status === 201) {
+          toast.success('Patient created successfully');
+        }
       }
+
     } catch (error) {
-      console.error('Error details:', error); // Logs the full error object
-      console.log('Request data:', {
-        first_name,
-        last_name,
-        gender: gender.name,
-        date_of_birth,
-        email,
-        phone_number,
-        address,
-      }); // Logs the data being sent
-      toast.error('Failed to create patient');
-      }
+      console.error('Error saving patient:', error);
+      toast.error('Failed to save patient');
+    }
   };
 
   return (
@@ -124,39 +161,34 @@ function PersonalInfo({ titles }) {
       {/* phone */}
       <div className="flex w-full flex-col gap-3">
         <div className="grid sm:grid-cols-2 gap-4 w-full">
-        
-      <div>
-        <Input
-          label="Phone Number"
-          value={phone_number}
-          onChange={(e) => setPhoneNumber(e.target.value)}
-          error={errors.phone_number}
-          color={true}
-          type="number"
-        />
-        {errors.phone_number && <p className="text-red-500 text-xs">{errors.phone_number}</p>}
-      </div>
+            <div>
+                <Input
+                label="Phone Number"
+                value={phone_number}
+                onChange={(e) => setPhoneNumber(e.target.value)}
+                error={errors.phone_number}
+                color={true}
+                type="number"
+                />
+                {errors.phone_number && <p className="text-red-500 text-xs">{errors.phone_number}</p>}
+            </div>
 
-      {/* email */}
-      <div>
-        <Input
-          label="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          error={errors.email}
-          color={true}
-          type="email"
-        />
-        {errors.email && <p className="text-red-500 text-xs">{errors.email}</p>}
+            {/* email */}
+            <div>
+                <Input
+                label="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                error={errors.email}
+                color={true}
+                type="email"
+                />
+                {errors.email && <p className="text-red-500 text-xs">{errors.email}</p>}
+            </div>
       </div>
-      </div>
+  </div>
 
-      </div>
-
-      {!titles && (
-        <>
-          {/* gender */}
-          <div className="flex w-full flex-col gap-3">
+      <div className="flex w-full flex-col gap-3">
             <div className="grid sm:grid-cols-2 gap-4 w-full">
             <div>
               <p className="text-black text-sm mb-3">Gender</p>
@@ -191,9 +223,7 @@ function PersonalInfo({ titles }) {
             />
             {errors.address && <p className="text-red-500 text-xs">{errors.address}</p>}
           </div>
-        </>
-      )}
-
+     
       {/* submit */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
         <Button
@@ -213,4 +243,4 @@ function PersonalInfo({ titles }) {
   );
 }
 
-export default PersonalInfo;
+export default PatientInfo;

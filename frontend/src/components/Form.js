@@ -76,29 +76,37 @@ export function MenuSelect({ children, datas, item: data }) {
 
 // select 2
 
-export function Select({ children, selectedPerson, setSelectedPerson, datas }) {
+export function Select({ children, selectedPerson, setSelectedPerson, datas, disabled }) {
+  
   return (
-    <div className="text-sm relative w-full ">
+    <div className="text-sm relative w-full">
       <div className="w-full">
-        <Listbox value={selectedPerson} onChange={setSelectedPerson}>
-          <Listbox.Button className={'w-full'}>{children}</Listbox.Button>
-          <Listbox.Options className="flex  flex-col gap-4 top-10 z-50 absolute left-0 w-full bg-white rounded-md shadow-lg py-4 px-6 ring-1 ring-border focus:outline-none">
-            {datas.map((person) => (
-              <Listbox.Option
-                className={`cursor-pointer text-xs hover:text-subMain`}
-                key={person.id}
-                value={person}
-                disabled={person.unavailable}
-              >
-                {person.name}
-              </Listbox.Option>
-            ))}
-          </Listbox.Options>
+        <Listbox value={selectedPerson} onChange={disabled ? null : setSelectedPerson} disabled={disabled}>
+          <Listbox.Button
+            className={`w-full ${disabled ? 'text-gray-400 cursor-not-allowed' : ''}`}
+          >
+            {children}
+          </Listbox.Button>
+          {!disabled && (
+            <Listbox.Options className="flex flex-col gap-4 top-10 z-50 absolute left-0 w-full bg-white rounded-md shadow-lg py-4 px-6 ring-1 ring-border focus:outline-none">
+              {datas.map((person) => (
+                <Listbox.Option
+                  className={`cursor-pointer text-xs hover:text-subMain`}
+                  key={person.id}
+                  value={person}
+                  disabled={person.unavailable}
+                >
+                  {person.name}
+                </Listbox.Option>
+              ))}
+            </Listbox.Options>
+          )}
         </Listbox>
       </div>
     </div>
   );
 }
+
 
 // switch
 
