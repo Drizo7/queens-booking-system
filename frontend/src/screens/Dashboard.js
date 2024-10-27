@@ -247,7 +247,7 @@ function Dashboard() {
                   {card.value}
                   {
                     // if the id === 4 then add the $ sign
-                    card.id === 4 ? '$' : '+'
+                    card.id === 4 ? '+' : '+'
                   }
                 </h4>
                 <p className={`text-sm flex gap-2 ${card.color[1]}`}>

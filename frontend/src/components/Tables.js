@@ -453,14 +453,14 @@ export function ReceptionistsTable({ data, functions }) {
       title: 'View',
       icon: FiEye,
       onClick: (data) => {
-        functions.preview(data);
+        toast.error('Permission denied');
       },
     },
     {
       title: 'Delete',
       icon: RiDeleteBin6Line,
       onClick: () => {
-        toast.error('This feature is not available yet');
+        toast.error('Permission denied');
       },
     },
   ];

@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { BiMenu } from 'react-icons/bi';
 import MenuDrawer from '../components/Drawer/MenuDrawer';
 import axios from 'axios';
+import { FaSun, FaCloudSun, FaCloudMoon, FaMoon } from 'react-icons/fa';
 
 function Header() {
   const [isOpen, setIsOpen] = React.useState(false);
@@ -16,6 +17,22 @@ function Header() {
     first_name: '',
     last_name: '',
   });
+
+  const getGreeting = () => {
+    const currentHour = new Date().getHours();
+
+    if (currentHour < 12) {
+      return { message: "Good morning", icon: <FaSun size={25} color="#FFA500" /> }; // Sun icon
+    } else if (currentHour < 18) {
+      return { message: "Good afternoon", icon: <FaCloudSun size={25} color="#FFD700" /> }; // Cloud with sun icon
+    } else if (currentHour < 21) {
+      return { message: "Good evening", icon: <FaCloudMoon size={25} color="#C0C0C0" /> }; // Cloud with moon icon
+    } else {
+      return { message: "Good night", icon: <FaMoon size={25} color="#C0C0C0" /> }; // Moon icon
+    }
+  };
+
+  const greeting = getGreeting();
 
   // Fetch user data on component mount
   useEffect(() => {
@@ -71,12 +88,20 @@ function Header() {
           >
             <BiMenu />
           </button>
+          {/* header */}
+          <div className="flex items-center justify-between">
+              {greeting.icon}
+              <span className="ml-4 text-2xl font-bold text-gray-800 hidden sm:inline">{greeting.message}</span>
+            <p className="ml-3 text-xl text-gray-600 font-small hidden sm:inline">
+              {`${userData.first_name} ${userData.last_name}`}
+            </p>
+          </div>
           {/* search */}
-          <input
+          {/* <input
             type="text"
             placeholder='Search "Patients"'
             className="md:w-96 w-full h-12 text-sm text-main rounded-md bg-dry border border-border px-4"
-          />
+          /> */}
         </div>
         <div className="md:col-span-1 sm:col-span-1 col-span-2 items-center justify-end pr-4 md:pr-0">
           <div className="float-right flex gap-4 items-center justify-center">

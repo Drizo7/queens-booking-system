@@ -4,18 +4,16 @@ import { sortsDatas } from '../../components/Datas';
 import { Link, useNavigate } from 'react-router-dom';
 import { BiChevronDown, BiPlus, BiTime } from 'react-icons/bi';
 import { BsCalendarMonth } from 'react-icons/bs';
-import { MdFilterList, MdOutlineCalendarMonth } from 'react-icons/md';
+import { MdCloudDownload, MdOutlineCalendarMonth } from 'react-icons/md';
 import { toast } from 'react-hot-toast';
-import { Button, FromToDate, Select } from '../../components/Form';
+import { Button,  Select } from '../../components/Form';
 import { PatientTable } from '../../components/Tables';
 import axios from 'axios';
 
 function Patients() {
-  const [status, setStatus] = useState(sortsDatas.filterPatient[0]);
-  const [gender, setGender] = useState(sortsDatas.genderFilter[0]);
-  const [dateRange, setDateRange] = useState([new Date(), new Date()]);
-  const [startDate, endDate] = dateRange;
   const [patientsData, setPatientsData] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [sortTriggered, setSortTriggered] = useState(false);
   const navigate = useNavigate();
 
   // Function to fetch patient data from API
@@ -31,21 +29,76 @@ function Patients() {
     fetchPatients();
   }, []);
 
+  // Filter patients based on search term
+  const filteredPatientsData = patientsData.filter((patient) => {
+    const firstName = patient.first_name.toLowerCase();
+    const lastName = patient.last_name.toLowerCase();
+    const fullName = `${firstName} ${lastName}`;
+    const address = patient.address.toLowerCase();
+    const phoneNumber = patient.phone_number.toLowerCase();
+    const lowerSearchTerm = searchTerm.toLowerCase();
 
-  const sorts = [
+    return (
+      firstName.includes(lowerSearchTerm) ||
+      lastName.includes(lowerSearchTerm) ||
+      fullName.includes(lowerSearchTerm) ||
+      address.includes(lowerSearchTerm)||
+      phoneNumber.includes(lowerSearchTerm)
+    );
+  });
+
+  const [sorts, setSorts] = useState([
     {
-      id: 2,
-      selected: status,
-      setSelected: setStatus,
+      id: 1,
+      name: 'status',
+      selected: sortsDatas.filterPatient[0],
       datas: sortsDatas.filterPatient,
     },
     {
-      id: 3,
-      selected: gender,
-      setSelected: setGender,
+      id: 2,
+      name: 'gender',
+      selected: sortsDatas.genderFilter[0],
       datas: sortsDatas.genderFilter,
     },
-  ];
+  ]);
+
+const sortedPatientsData = sortTriggered
+    ? filteredPatientsData
+        .sort((a, b) => {
+      // Sort by date (newest/oldest) based on the selected status
+      const status = sorts.find((item) => item.name === 'status').selected;
+      if (status.name === 'Newest Patients') {
+        return new Date(b.createdAt) - new Date(a.createdAt); // Newest first
+      } else if (status.name === 'Oldest Patients') {
+        return new Date(a.createdAt) - new Date(b.createdAt); // Oldest first
+      }
+      return 0; // No sort applied
+    })
+        .sort((a, b) => {
+          // Sort by gender if gender filter is applied
+          const gender = sorts.find((item) => item.name === 'gender').selected;
+          if (gender.name !== 'All') {
+            return gender.name === 'Male'
+              ? a.gender === 'Male' ? -1 : 1
+              : a.gender === 'Female' ? -1 : 1;
+          }
+          return 0;
+        })
+    : filteredPatientsData;
+
+    const handleSortChange = (id, newSelection) => {
+    setSorts((prevSorts) =>
+      prevSorts.map((sort) =>
+        sort.id === id ? { ...sort, selected: newSelection } : sort
+      )
+    );
+    setSortTriggered(true); // Enable sorting once user interacts
+  };
+
+  const displayedPatientsData = searchTerm || sortTriggered
+    ? sortedPatientsData
+    : patientsData;
+    
   // boxes
   const boxes = [
     {
@@ -72,7 +125,7 @@ function Patients() {
   ];
 
   // preview
-  const previewPayment = (id) => {
+  const previewPatient = (id) => {
     navigate(`/patients/preview/${id}`);
   };
 
@@ -121,10 +174,12 @@ function Patients() {
         data-aos-offset="200"
         className="bg-white my-8 rounded-xl border-[1px] border-border p-5"
       >
-        <div className="grid lg:grid-cols-5 grid-cols-1 xs:grid-cols-2 md:grid-cols-3 gap-2">
+        <div className="flex items-center justify-between gap-2">
           <input
             type="text"
-            placeholder='Search "Patients"'
+            placeholder='Search Patient'
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
             className="h-14 text-sm text-main rounded-md bg-dry border border-border px-4"
           />
           {/* sort  */}
@@ -132,7 +187,7 @@ function Patients() {
             <Select
               key={item.id}
               selectedPerson={item.selected}
-              setSelectedPerson={item.setSelected}
+              setSelectedPerson={(newSelection) => handleSortChange(item.id, newSelection)}
               datas={item.datas}
             >
               <div className="h-14 w-full text-xs text-main rounded-md bg-dry border border-border px-4 flex items-center justify-between">
@@ -142,16 +197,12 @@ function Patients() {
             </Select>
           ))}
           {/* date */}
-          <FromToDate
-            startDate={startDate}
-            endDate={endDate}
-            bg="bg-dry"
-            onChange={(update) => setDateRange(update)}
-          />
+          
           {/* export */}
+          
           <Button
-            label="Filter"
-            Icon={MdFilterList}
+            label="Export"
+            Icon={MdCloudDownload}
             onClick={() => {
               toast.error('Filter data is not available yet');
             }}
@@ -159,9 +210,9 @@ function Patients() {
         </div>
         <div className="mt-8 w-full overflow-x-scroll">
           <PatientTable
-            data={patientsData}
+            data={displayedPatientsData}
             functions={{
-              preview: previewPayment,
+              preview: previewPatient,
             }}
             used={false}
           />

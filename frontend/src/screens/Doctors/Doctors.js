@@ -13,6 +13,7 @@ function Doctors() {
   const [isOpen, setIsOpen] = React.useState(false);
   const [doctorData, setDoctorData] = useState([]);
   const navigate = useNavigate();
+  const [searchTerm, setSearchTerm] = useState('');
 
   const fetchDoctors = async () => {
     try {
@@ -22,6 +23,23 @@ function Doctors() {
       toast.error('Failed to fetch doctors');
     }
   };
+
+  const filteredDoctorData = doctorData.filter((doctor) => {
+    const firstName = doctor.first_name.toLowerCase();
+    const lastName = doctor.last_name.toLowerCase();
+    const fullName = `${firstName} ${lastName}`;
+    const lowerSearchTerm = searchTerm.toLowerCase();
+
+    return (
+      firstName.includes(lowerSearchTerm) ||
+      lastName.includes(lowerSearchTerm) ||
+      fullName.includes(lowerSearchTerm) 
+    );
+  });
+
+  const displayedData = searchTerm 
+    ? filteredDoctorData
+    : doctorData;
 
   const onCloseModal = () => {
     setIsOpen(false);
@@ -78,6 +96,8 @@ function Doctors() {
             <input
               type="text"
               placeholder='Search doctor'
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
               className="h-14 w-full text-sm text-main rounded-md bg-dry border border-border px-4"
             />
           </div>
@@ -92,7 +112,7 @@ function Doctors() {
           />
         </div>
         <div className="mt-8 w-full overflow-x-scroll">
-          <DoctorsTable doctor={true} data={doctorData} functions={{ preview: preview, }}
+          <DoctorsTable doctor={true} data={displayedData} functions={{ preview: preview, }}
           />
         </div>
       </div>

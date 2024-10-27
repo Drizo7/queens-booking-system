@@ -14,6 +14,7 @@ function Receptions() {
   const [isOpen, setIsOpen] = useState(false);
   const [receptionistData, setReceptionistData] = useState([]);
   const [status, setStatus] = useState(sortsDatas.stocks[0]);
+  const [searchTerm, setSearchTerm] = useState('');
 
   // Function to fetch receptionist data from API
   const fetchReceptionists = async () => {
@@ -24,6 +25,23 @@ function Receptions() {
       toast.error('Failed to fetch receptionists');
     }
   };
+
+  const filteredReceptionistsData = receptionistData.filter((receptionist) => {
+    const firstName = receptionist.first_name.toLowerCase();
+    const lastName = receptionist.last_name.toLowerCase();
+    const fullName = `${firstName} ${lastName}`;
+    const lowerSearchTerm = searchTerm.toLowerCase();
+
+    return (
+      firstName.includes(lowerSearchTerm) ||
+      lastName.includes(lowerSearchTerm) ||
+      fullName.includes(lowerSearchTerm) 
+    );
+  });
+
+  const displayedData = searchTerm 
+    ? filteredReceptionistsData
+    : receptionistData;
 
   const onCloseModal = () => {
     setIsOpen(false);
@@ -70,6 +88,8 @@ function Receptions() {
             <input
               type="text"
               placeholder='Search receptionist'
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
               className="h-14 w-full text-sm text-main rounded-md bg-dry border border-border px-4"
             />
             <Select
@@ -95,7 +115,7 @@ function Receptions() {
 
         {/* Receptionist Table */}
         <div className="mt-8 w-full overflow-x-scroll">
-          <ReceptionistsTable data={receptionistData} onEdit={onEdit} />
+          <ReceptionistsTable data={displayedData} onEdit={onEdit} />
         </div>
       </div>
     </Layout>

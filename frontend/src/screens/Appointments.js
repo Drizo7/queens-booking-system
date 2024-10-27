@@ -16,6 +16,7 @@ function Appointments() {
   const [status, setStatus] = useState(sortsDatas.stocks[0]);
   const [appointmentsData, setAppointmentsData] = useState([]);
   const [selectedAppointment, setSelectedAppointment] = useState(null); 
+  const [searchTerm, setSearchTerm] = useState('');
 
   // Fetch appointments data from the API
   const fetchAppointments = async () => {
@@ -26,6 +27,33 @@ function Appointments() {
       toast.error('Failed to fetch appointments');
     }
   };
+
+
+
+  const filteredAppointmentData = appointmentsData.filter((appointment) => {
+    const patientfirstName = appointment.Patient.first_name.toLowerCase();
+    const patientlastName = appointment.Patient.last_name.toLowerCase();
+    const doctorfirstName = appointment.Doctor.first_name.toLowerCase();
+    const doctorlastName = appointment.Doctor.last_name.toLowerCase();
+    const patientfullName = `${patientfirstName} ${patientlastName}`;
+    const doctorfullName = `${doctorfirstName} ${doctorlastName}`;
+    const clinicName = appointment.Clinic ? appointment.Clinic.name.toLowerCase() : '';
+    const lowerSearchTerm = searchTerm.toLowerCase();
+
+    return (
+      patientfirstName.includes(lowerSearchTerm) ||
+      patientlastName.includes(lowerSearchTerm) ||
+      doctorfirstName.includes(lowerSearchTerm) ||
+      doctorlastName.includes(lowerSearchTerm) ||
+      patientfullName.includes(lowerSearchTerm) ||
+      doctorfullName.includes(lowerSearchTerm) ||
+      clinicName.includes(lowerSearchTerm) 
+    );
+  });
+
+  const displayedData = searchTerm 
+    ? filteredAppointmentData
+    : appointmentsData;
 
   // Toggle modal for adding or editing appointments
   const handleClose = () => {
@@ -84,7 +112,9 @@ function Appointments() {
           <div className="md:col-span-5 grid lg:grid-cols-4 xs:grid-cols-2 items-center gap-2">
             <input
               type="text"
-              placeholder='Search "appointment"'
+              placeholder='Search appointment'
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
               className="h-14 w-full text-sm text-main rounded-md bg-dry border border-border px-4"
             />
             <Select
@@ -110,7 +140,7 @@ function Appointments() {
 
         {/* Appointments Table */}
         <div className="mt-8 w-full overflow-x-scroll">
-          <AppointmentsTable data={appointmentsData} onEdit={onEdit} />
+          <AppointmentsTable data={displayedData} onEdit={onEdit} />
         </div>
       </div>
     </Layout>

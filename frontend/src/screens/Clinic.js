@@ -16,6 +16,7 @@ function Clinic() {
   const [status, setStatus] = useState(sortsDatas.stocks[0]);
   const [clinicsData, setClinicsData] = useState([]);
   const [selectedClinic, setSelectedClinic] = useState(null); // Added state for selected clinic
+  const [searchTerm, setSearchTerm] = useState('');
 
   // Function to fetch clinic data from API
   const fetchClinics = async () => {
@@ -26,6 +27,22 @@ function Clinic() {
       toast.error('Failed to fetch clinics');
     }
   };
+
+const lowerSearchTerm = searchTerm.toLowerCase();
+
+const filteredClinicData = clinicsData.filter((clinic) => {
+    const Name = clinic.name.toLowerCase();
+    const Location = clinic.location.toLowerCase();
+
+    return (
+      Name.includes(lowerSearchTerm) ||
+      Location.includes(lowerSearchTerm)  
+    );
+  });
+
+   const displayedData = searchTerm 
+    ? filteredClinicData
+    : clinicsData;
 
   const onCloseModal = () => {
     setIsOpen(false);
@@ -95,7 +112,9 @@ function Clinic() {
           <div className="md:col-span-5 grid lg:grid-cols-4 xs:grid-cols-2 items-center gap-2">
             <input
               type="text"
-              placeholder='Search "paracetamol"'
+              placeholder='Search clinic'
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
               className="h-14 w-full text-sm text-main rounded-md bg-dry border border-border px-4"
             />
             <Select
@@ -117,7 +136,7 @@ function Clinic() {
           />
         </div>
         <div className="mt-8 w-full overflow-x-scroll">
-          <ClinicTable data={clinicsData} onEdit={onEdit} OnDelete={handleDeleteClinic}/>
+          <ClinicTable data={displayedData} onEdit={onEdit} OnDelete={handleDeleteClinic}/>
         </div>
       </div>
     </Layout>
