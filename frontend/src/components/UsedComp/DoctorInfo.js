@@ -177,7 +177,7 @@ function DoctorInfo({ doctor , onUpdate }) {
           label={'Delete Account'}
           Icon={RiDeleteBin5Line}
           onClick={() => {
-            toast.error('This feature is not available yet');
+            toast.error('Access denied.');
           }}
         />
         <Button

@@ -109,18 +109,18 @@ function Header() {
               <div className="relative">
                 <MdOutlineNotificationsNone className="text-2xl hover:text-subMain" />
                 <span className="absolute -top-2.5 -right-2.5 font-semibold bg-subMain rounded-full px-1.5 py-0.5 text-xs text-white text-center">
-                  5
+                  0
                 </span>
               </div>
             </NotificationComp>
 
             <div className=" items-center md:flex hidden">
               <MenuSelect datas={DropDown1}>
-                <div className="flex gap-4 items-center p-4 rounded-lg">
+                <div className="flex gap-2 items-center p-6 rounded-lg">
                   <img
-                    src="/images/user1.jpg"
+                    src="/images/user11.png"
                     alt="user"
-                    className="w-12 border border-border object-cover h-12 rounded-full"
+                    className="w-7 object-cover h-7 rounded-full"
                   />
                   <p className="text-sm text-textGray font-medium">{`${userData.first_name} ${userData.last_name}`}</p>
                 </div>

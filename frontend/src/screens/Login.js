@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Button, Input } from '../components/Form';
 import { BiLogInCircle } from 'react-icons/bi';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-hot-toast';
 import axios from 'axios';
 
 function Login() {
@@ -11,11 +12,11 @@ function Login() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    console.log('Email input:', email);
-    console.log('Password input:', password);
 
     if (!email || !password) {
+      
       console.error('Both email and password must be provided.');
+      toast.error('Both email and password must be provided.');
       return;
     }
 
@@ -30,6 +31,7 @@ function Login() {
       localStorage.setItem('token', token);
       navigate('/');
     } catch (err) {
+      toast.error('Login failed: '+ err.response?.data?.message);
       console.error('Login failed:', err.response ? err.response.data : err.message);
     }
   };

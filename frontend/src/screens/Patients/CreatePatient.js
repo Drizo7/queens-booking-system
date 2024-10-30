@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { IoArrowBackOutline } from 'react-icons/io5';
 import Layout from '../../Layout';
-import PersonalInfo from '../../components/UsedComp/PersonalInfo';
+import PatientCreate from '../../components/UsedComp/PatientCreate';
 
 function CreatePatient() {
   return (
@@ -23,7 +23,7 @@ function CreatePatient() {
         data-aos-offset="200"
         className="bg-white my-8 rounded-xl border-[1px] border-border p-6"
       >
-        <PersonalInfo titles={false} />
+        <PatientCreate titles={false} />
       </div>
     </Layout>
   );

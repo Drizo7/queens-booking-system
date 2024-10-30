@@ -1,43 +1,33 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Uploder from '../Uploader';
-import { sortsDatas } from '../Datas';
-import { Button, DatePickerComp, Input, Select } from '../Form';
-import { BiChevronDown } from 'react-icons/bi';
+import { Button, Input } from '../Form';
 import { toast } from 'react-hot-toast';
 import { HiOutlineCheckCircle } from 'react-icons/hi';
 import { RiDeleteBin5Line } from 'react-icons/ri';
 
-function PersonalInfo({ titles }) {
+function PersonalInfo({ userData, onUpdateUserData }) {
   const [first_name, setFirstName] = useState('');
   const [last_name, setLastName] = useState('');
   const [phone_number, setPhoneNumber] = useState('');
   const [email, setEmail] = useState('');
-  const [date_of_birth, setDateOfBirth] = useState(new Date());
-  const [gender, setGender] = useState(sortsDatas.genderFilter[0]);
-  const [address, setAddress] = useState('');
   const [errors, setErrors] = useState({});
+
+  // Populate initial values from userData prop
+  useEffect(() => {
+    setFirstName(userData.first_name || '');
+    setLastName(userData.last_name || '');
+    setPhoneNumber(userData.phone_number || '');
+    setEmail(userData.email || '');
+  }, [userData]);
 
   const validateForm = () => {
     const newErrors = {};
-
-    if (!first_name.trim()) {
-      newErrors.firstName = 'First Name is required';
-    }
-    if (!last_name.trim()) {
-      newErrors.lastName = 'Last Name is required';
-    }
-    if (!phone_number.trim()) {
-      newErrors.phoneNumber = 'Phone Number is required';
-    }
-    if (!email.trim()) {
-      newErrors.email = 'Email is required';
-    } else if (!/\S+@\S+\.\S+/.test(email)) {
-      newErrors.email = 'Email format is invalid';
-    }
-    if (!address.trim()) {
-      newErrors.address = 'Address is required';
-    }
+    if (!first_name.trim()) newErrors.first_name = 'First Name is required';
+    if (!last_name.trim()) newErrors.last_name = 'Last Name is required';
+    //if (!phone_number.trim()) newErrors.phone_number = 'Phone Number is required';
+    if (!email.trim()) newErrors.email = 'Email is required';
+    else if (!/\S+@\S+\.\S+/.test(email)) newErrors.email = 'Email format is invalid';
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -50,41 +40,25 @@ function PersonalInfo({ titles }) {
     }
 
     try {
-      const response = await axios.post('http://localhost:5000/api/patient', {
-        first_name,
-        last_name,
-        gender: gender.name,
-        date_of_birth,
-        email,
-        phone_number,
-        address,
-      });
+      const response = await axios.put('http://localhost:5000/api/profile',
+        { first_name, last_name, phone_number, email }, // request body
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`, // separate headers object
+          },
+        }
+      );
 
       if (response.status === 201) {
-        toast.success('Patient created successfully');
-        // Reset form after successful submission
-        setFirstName('');
-        setLastName('');
-        setPhoneNumber('');
-        setEmail('');
-        setAddress('');
-        setGender(sortsDatas.genderFilter[0]);
-        setDateOfBirth(new Date());
+        toast.success('Profile updated successfully');
+        const updatedUser = { first_name, last_name, email, phone_number };
+        onUpdateUserData(updatedUser); // Update parent component state
       }
     } catch (error) {
-      console.error('Error details:', error); // Logs the full error object
-      console.log('Request data:', {
-        first_name,
-        last_name,
-        gender: gender.name,
-        date_of_birth,
-        email,
-        phone_number,
-        address,
-      }); // Logs the data being sent
-      toast.error('Failed to create patient');
-      }
+      toast.error('Failed to update profile');
+    }
   };
+
 
   return (
     <div className="flex-colo gap-4">
@@ -153,47 +127,7 @@ function PersonalInfo({ titles }) {
 
       </div>
 
-      {!titles && (
-        <>
-          {/* gender */}
-          <div className="flex w-full flex-col gap-3">
-            <div className="grid sm:grid-cols-2 gap-4 w-full">
-            <div>
-              <p className="text-black text-sm mb-3">Gender</p>
-            <Select
-              selectedPerson={gender}
-              setSelectedPerson={setGender}
-              datas={sortsDatas.genderFilter}
-            >
-              <div className="w-full flex-btn text-textGray text-sm p-4 border border-border font-light rounded-lg focus:border focus:border-subMain">
-                {gender?.name} <BiChevronDown className="text-xl" />
-              </div>
-            </Select>
-          </div>
-            {/* date */}
-          <DatePickerComp
-            label="Date of Birth"
-            startDate={date_of_birth}
-            onChange={setDateOfBirth}
-          />
-          </div>
-          </div>
-
-          {/* address */}
-          <div className="flex w-full flex-col gap-3">
-            <Input
-              label="Address"
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
-              error={errors.address}
-              color={true}
-              type="text"
-            />
-            {errors.address && <p className="text-red-500 text-xs">{errors.address}</p>}
-          </div>
-        </>
-      )}
-
+      
       {/* submit */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
         <Button

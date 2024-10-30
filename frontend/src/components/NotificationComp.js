@@ -15,9 +15,14 @@ function NotificationComp({ children }) {
             Mark all read
           </button>
         </div>
-        {/* notif */}
+        {/* notification */}
         <div className="flex flex-col gap-4 overflow-y-scroll max-h-[500px]">
-          {notificationsData.map((item) => (
+          <div className="w-full p-4 border border-border rounded-lg">
+              <div className="items-center">
+                <p className="text-sm font-light text-main">No notifications yet</p>
+              </div>
+            </div>
+          {/* {notificationsData.map((item) => (
             <div
               key={item.id}
               className="w-full p-4 border border-border rounded-lg"
@@ -60,9 +65,9 @@ function NotificationComp({ children }) {
                     <p className="text-xs text-textGray">2:00 PM</p>
                   </div>
                 </div>
-              </div>
-            </div>
-          ))}
+              </div> 
+            </div> 
+          ))}*/}
         </div>
       </Menu.Items>
     </Menu>

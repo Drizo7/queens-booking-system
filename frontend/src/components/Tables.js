@@ -291,7 +291,14 @@ export function ClinicTable({ data, onEdit, OnDelete }) {
         </tr>
       </thead>
       <tbody>
-        {data.map((item, index) => (
+         {data.length === 0 ? (
+          // Display message if no data
+          <tr>
+            <td colSpan={5} className="text-center text-gray-500 py-4">
+              No clinic data available yet
+            </td>
+          </tr>
+        ) : ( data.map((item, index) => (
           <tr
             key={item.id}
             className="border-b border-border hover:bg-greyed transitions"
@@ -309,7 +316,7 @@ export function ClinicTable({ data, onEdit, OnDelete }) {
               </MenuSelect>
             </td>
           </tr>
-        ))}
+        )))}
       </tbody>
     </table>
   );
@@ -395,7 +402,7 @@ export function PatientTable({ data, functions, used }) {
       title: 'Delete',
       icon: RiDeleteBin6Line,
       onClick: () => {
-        toast.error('This feature is not available yet');
+        toast.error('Access denied.');
       },
     },
   ];
@@ -419,7 +426,14 @@ export function PatientTable({ data, functions, used }) {
         </tr>
       </thead>
       <tbody>
-        {data.map((item, index) => (
+         {data.length === 0 ? (
+          // Display message if no data
+          <tr>
+            <td colSpan={5} className="text-center text-gray-500 py-4">
+              No patient data available yet
+            </td>
+          </tr>
+        ) : ( data.map((item, index) => (
           <tr key={item.id} className="border-b border-border hover:bg-greyed transitions">
             <td className={tdclasse}>{index + 1}</td>
             <td className={tdclasse}>{item.first_name}</td>
@@ -441,7 +455,7 @@ export function PatientTable({ data, functions, used }) {
               </MenuSelect>
             </td>
           </tr>
-        ))}
+        )))}
       </tbody>
     </table>
   );
@@ -453,14 +467,14 @@ export function ReceptionistsTable({ data, functions }) {
       title: 'View',
       icon: FiEye,
       onClick: (data) => {
-        toast.error('Permission denied');
+        toast.error('Access denied.');
       },
     },
     {
       title: 'Delete',
       icon: RiDeleteBin6Line,
       onClick: () => {
-        toast.error('Permission denied');
+        toast.error('Access denied.');
       },
     },
   ];
@@ -477,7 +491,14 @@ export function ReceptionistsTable({ data, functions }) {
         </tr>
       </thead>
       <tbody>
-        {data.map((item, index) => (
+         {data.length === 0 ? (
+          // Display message if no data
+          <tr>
+            <td colSpan={5} className="text-center text-gray-500 py-4">
+              No receptionist data available yet
+            </td>
+          </tr>
+        ) : ( data.map((item, index) => (
           <tr
             key={item.id}
             className="border-b border-border hover:bg-greyed transitions">
@@ -494,7 +515,7 @@ export function ReceptionistsTable({ data, functions }) {
               </MenuSelect>
             </td>
           </tr>
-        ))}
+        )))}
       </tbody>
     </table>
   );
@@ -514,7 +535,7 @@ export function DoctorsTable({ data, functions }) {
       title: 'Delete',
       icon: RiDeleteBin6Line,
       onClick: () => {
-        toast.error('This feature is not available yet');
+        toast.error('Access denied.');
       },
     },
   ];
@@ -531,7 +552,14 @@ export function DoctorsTable({ data, functions }) {
         </tr>
       </thead>
       <tbody>
-        {data.map((item, index) => (
+         {data.length === 0 ? (
+          // Display message if no data
+          <tr>
+            <td colSpan={5} className="text-center text-gray-500 py-4">
+              No doctor data available yet
+            </td>
+          </tr>
+        ) : ( data.map((item, index) => (
           <tr
             key={item.id}
             className="border-b border-border hover:bg-greyed transitions">
@@ -548,7 +576,7 @@ export function DoctorsTable({ data, functions }) {
               </MenuSelect>
             </td>
           </tr>
-        ))}
+        )))}
       </tbody>
     </table>
   );
@@ -568,10 +596,20 @@ export function AppointmentsTable({ data, onEdit }) {
       title: 'Delete',
       icon: RiDeleteBin6Line,
       onClick: () => {
-        toast.error('This feature is not available yet');
+        toast.error('Access denied.');
       },
     },
   ];
+
+  const calculateEndTime = (startTime, duration) => {
+    const endTime = new Date(startTime);
+    endTime.setMinutes(endTime.getMinutes() + duration);
+    return endTime.toLocaleTimeString(undefined, {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false,
+    });
+  };
 
   return (
     <table className="table-auto w-full">
@@ -582,15 +620,21 @@ export function AppointmentsTable({ data, onEdit }) {
           <th className={thclass}>Doctor Name</th>
           <th className={thclass}>Clinic</th>
           <th className={thclass}>Date</th>
-          <th className={thclass}>Start Time</th>
-          <th className={thclass}>Duration</th>
+          <th className={thclass}>Time</th>
           <th className={thclass}>Status</th>
           <th className={thclass}>Description</th>
           <th className={thclass}>Actions</th>
         </tr>
       </thead>
       <tbody>
-        {data.map((item, index) => (
+        { data.length === 0 ? (
+          // Display message if no data
+          <tr>
+            <td colSpan={5} className="text-center text-gray-500 py-4">
+              No appointment data available yet
+            </td>
+          </tr>
+        ) : ( data.map((item, index) => (
           <tr key={item.id} className="border-b border-border hover:bg-greyed transitions">
             <td className={tdclass}>{index + 1}</td> {/* Incremented index */}
             <td className={tdclass}>{`${item.Patient.first_name} ${item.Patient.last_name}`}</td>
@@ -603,13 +647,26 @@ export function AppointmentsTable({ data, onEdit }) {
               month: 'long',
               day: 'numeric',
             })}</td>
-            <td className={tdclass}>{new Date(item.start_time).toLocaleTimeString(undefined, {
-              hour: '2-digit',
-              minute: '2-digit',
-              hour12: false,
-            })}</td>
-            <td className={tdclass}>{item.duration}</td>
-            <td className={tdclass}>{item.status}</td>
+            <td className={tdclass}>
+              {`${new Date(item.start_time).toLocaleTimeString(undefined, {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false,
+              })} - ${calculateEndTime(item.start_time, item.duration)}`}
+            </td>
+            <td className={tdclass}>
+              <span
+                className={`py-1  px-4 ${
+                  item.status === 'Completed'
+                    ? 'bg-subMain text-subMain'
+                    : item.status === 'Scheduled'
+                    ? 'bg-orange-500 text-orange-500'
+                    : item.status === 'Cancelled' && 'bg-red-600 text-red-600'
+                } bg-opacity-10 text-xs rounded-xl`}
+              >
+                {item.status}
+              </span>
+            </td>
             <td className={tdclass}>{item.description}</td>
             <td className={tdclass}>
               <MenuSelect datas={DropDown1} item={item}>
@@ -619,7 +676,7 @@ export function AppointmentsTable({ data, onEdit }) {
               </MenuSelect>
             </td>
           </tr>
-        ))}
+        )))}
       </tbody>
     </table>
   );
@@ -628,62 +685,146 @@ export function AppointmentsTable({ data, onEdit }) {
 
 
 // appointment table
-export function AppointmentTable({ data, functions, doctor }) {
+export function AppointmentTable({ data, doctor }) {
+   const calculateEndTime = (startTime, duration) => {
+    const endTime = new Date(startTime);
+    endTime.setMinutes(endTime.getMinutes() + duration);
+    return endTime.toLocaleTimeString(undefined, {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false,
+    });
+  };
+
   return (
     <table className="table-auto w-full">
       <thead className="bg-dry rounded-md overflow-hidden">
         <tr>
           <th className={thclass}>Date</th>
-          <th className={thclass}>{doctor ? 'Patient' : 'Doctor'}</th>
+          <th className={thclass}>Patient</th>
+          <th className={thclass}>Clinic</th>
           <th className={thclass}>Status</th>
           <th className={thclass}>Time</th>
-          <th className={thclass}>Action</th>
         </tr>
       </thead>
       <tbody>
-        {data.map((item) => (
+        {data.length === 0 ? (
+          // Display message if no data
+          <tr>
+            <td colSpan={5} className="text-center text-gray-500 py-4">
+              Doctor has no appointment(s) yet
+            </td>
+          </tr>
+        ) : ( data.map((item) => (
           <tr
             key={item.id}
             className="border-b border-border hover:bg-greyed transitions"
           >
+            <td className={tdclass}>{new Date(item.date).toLocaleDateString(undefined, {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
+            })}</td>
+            <td className={tdclass}>{`${item.Patient.first_name} ${item.Patient.last_name}`}</td>
             <td className={tdclass}>
-              <p className="text-xs">{item.date}</p>
-            </td>
-            <td className={tdclass}>
-              <h4 className="text-xs font-medium">
-                {doctor ? item.user.title : item.doctor.title}
-              </h4>
-              <p className="text-xs mt-1 text-textGray">
-                {doctor ? item.user.phone : item.doctor.phone}
-              </p>
+              {item.Clinic ? item.Clinic.name : <span className="text-red-500">Deleted Clinic</span>}
             </td>
             <td className={tdclass}>
               <span
                 className={`py-1  px-4 ${
-                  item.status === 'Approved'
+                  item.status === 'Completed'
                     ? 'bg-subMain text-subMain'
-                    : item.status === 'Pending'
+                    : item.status === 'Scheduled'
                     ? 'bg-orange-500 text-orange-500'
-                    : item.status === 'Cancel' && 'bg-red-600 text-red-600'
+                    : item.status === 'Cancelled' && 'bg-red-600 text-red-600'
                 } bg-opacity-10 text-xs rounded-xl`}
               >
                 {item.status}
               </span>
             </td>
             <td className={tdclass}>
-              <p className="text-xs">{`${item.from} - ${item.to}`}</p>
+              {`${new Date(item.start_time).toLocaleTimeString(undefined, {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false,
+              })} - ${calculateEndTime(item.start_time, item.duration)}`}
             </td>
 
-            <td className={tdclass}>
-              <button
-                onClick={() => functions.preview(item)}
-                className="text-sm flex-colo bg-white text-subMain border rounded-md w-10 h-10"
-              >
-                <FiEye />
-              </button>
+          </tr>
+        ))
+        )}
+      </tbody>
+    </table>
+  );
+}
+export function PatientAppointmentTable({ data, patient }) {
+  const calculateEndTime = (startTime, duration) => {
+    const endTime = new Date(startTime);
+    endTime.setMinutes(endTime.getMinutes() + duration);
+    return endTime.toLocaleTimeString(undefined, {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false,
+    });
+  };
+
+  return (
+    <table className="table-auto w-full">
+      <thead className="bg-dry rounded-md overflow-hidden">
+        <tr>
+          <th className={thclass}>Date</th>
+          <th className={thclass}>Doctor</th>
+          <th className={thclass}>Clinic</th>
+          <th className={thclass}>Status</th>
+          <th className={thclass}>Time</th>
+        </tr>
+      </thead>
+      <tbody>
+        {data.length === 0 ? (
+          // Display message if no data
+          <tr>
+            <td colSpan={5} className="text-center text-gray-500 py-4">
+                Patient has no appointment(s) yet
             </td>
           </tr>
-        ))}
+        ) : ( data.map((item) => (
+          <tr
+            key={item.id}
+            className="border-b border-border hover:bg-greyed transitions"
+          >
+            <td className={tdclass}>{new Date(item.date).toLocaleDateString(undefined, {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
+            })}</td>
+            <td className={tdclass}>{`${item.Doctor.first_name} ${item.Doctor.last_name}`}</td>
+            <td className={tdclass}>
+              {item.Clinic ? item.Clinic.name : <span className="text-red-500">Deleted Clinic</span>}
+            </td>
+            <td className={tdclass}>
+              <span
+                className={`py-1  px-4 ${
+                  item.status === 'Completed'
+                    ? 'bg-subMain text-subMain'
+                    : item.status === 'Scheduled'
+                    ? 'bg-orange-500 text-orange-500'
+                    : item.status === 'Cancelled' && 'bg-red-600 text-red-600'
+                } bg-opacity-10 text-xs rounded-xl`}
+              >
+                {item.status}
+              </span>
+            </td>
+            <td className={tdclass}>
+              {`${new Date(item.start_time).toLocaleTimeString(undefined, {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false,
+              })} - ${calculateEndTime(item.start_time, item.duration)}`}
+            </td>
+
+          </tr>
+        ))
+        )}
       </tbody>
     </table>
   );

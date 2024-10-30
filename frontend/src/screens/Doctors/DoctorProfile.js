@@ -12,6 +12,7 @@ function DoctorProfile() {
   const [activeTab, setActiveTab] = React.useState(1);
   const { id } = useParams(); // Get doctor ID from the URL
   const [doctor, setDoctor] = useState(null); // State to store doctor data
+  const [appointments, setAppointments] = useState([]); // State for appointments
 
   useEffect(() => {
   const fetchDoctor = async () => {
@@ -30,7 +31,25 @@ function DoctorProfile() {
     }
   };
 
+  const fetchAppointments = async () => {
+  try {
+    // Fetch all appointments
+    const response = await axios.get(`http://localhost:5000/api/appointment`);
+    const allAppointments = response.data.appointments;
+    
+    // Filter appointments by doctor ID using doctor_id from the data
+    const doctorAppointments = allAppointments.filter(
+      (appointment) => appointment.doctor_id === id
+    );
+    
+    setAppointments(doctorAppointments);
+  } catch (error) {
+    console.error('Failed to fetch appointments:', error);
+  }
+};
+
   fetchDoctor();
+  fetchAppointments();
 }, [id]);
 
 // Function to update the doctor data
@@ -43,7 +62,7 @@ function DoctorProfile() {
       case 1:
         return <DoctorInfo doctor={doctor} onUpdate={updateDoctor} />;
       case 2:
-        return <AppointmentsUsed doctor={true} />;
+        return <AppointmentsUsed doctor={doctor} appointments={appointments} />;
     
       default:
         return;
@@ -74,7 +93,7 @@ function DoctorProfile() {
           <img
             src="/images/user1.png"
             alt="setting"
-            className="w-40 h-40 rounded-full object-cover border border-dashed border-subMain"
+            className="w-40 h-40 rounded-full object-cover "
           />
           <div className="gap-2 flex-colo">
             <h2 className="text-sm font-semibold">{doctor ? `Dr. ${doctor.first_name} ${doctor.last_name}` : 'Doctor Name'}

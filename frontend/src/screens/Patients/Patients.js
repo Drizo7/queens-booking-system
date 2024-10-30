@@ -140,7 +140,7 @@ const sortedPatientsData = sortTriggered
       </Link>
       <h1 className="text-xl font-semibold">Patients</h1>
       {/* boxes */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-8">
+      {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-8">
         {boxes.map((box) => (
           <div
             key={box.id}
@@ -165,7 +165,7 @@ const sortedPatientsData = sortTriggered
             </div>
           </div>
         ))}
-      </div>
+      </div> */}
       {/* datas */}
       <div
         data-aos="fade-up"

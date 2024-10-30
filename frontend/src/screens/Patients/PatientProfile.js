@@ -7,11 +7,13 @@ import { Link } from 'react-router-dom';
 import { IoArrowBackOutline } from 'react-icons/io5';
 import AppointmentsUsed from '../../components/UsedComp/AppointmentsUsed';
 import PatientInfo from '../../components/UsedComp/PatientInfo';
+import PatientAppointment from '../../components/UsedComp/PatientAppointment';
 
 function PatientProfile() {
   const [activeTab, setActiveTab] = React.useState(1);
   const { id } = useParams(); // Get patient ID from the URL
   const [patient, setPatient] = useState(null); // State to store patient data
+  const [appointments, setAppointments] = useState([]); // State for appointments
 
   useEffect(() => {
   const fetchPatient = async () => {
@@ -30,7 +32,25 @@ function PatientProfile() {
     }
   };
 
+  const fetchAppointments = async () => {
+  try {
+    // Fetch all appointments
+    const response = await axios.get(`http://localhost:5000/api/appointment`);
+    const allAppointments = response.data.appointments;
+    
+    // Filter appointments by doctor ID using doctor_id from the data
+    const patientAppointments = allAppointments.filter(
+      (appointment) => appointment.patient_id === id
+    );
+    
+    setAppointments(patientAppointments);
+  } catch (error) {
+    console.error('Failed to fetch appointments:', error);
+  }
+};
+
   fetchPatient();
+  fetchAppointments();
 }, [id]);
 
 // Function to update the patient data
@@ -44,7 +64,7 @@ function PatientProfile() {
       case 1:
         return <PatientInfo patient={patient} onUpdate={updatePatient} />;
       case 2:
-        return <AppointmentsUsed doctor={false} />;
+        return <PatientAppointment patient={patient} appointments={appointments} />;
       default:
         return;
     }
@@ -70,9 +90,9 @@ function PatientProfile() {
           className="col-span-12 flex-colo gap-6 lg:col-span-4 bg-white rounded-xl border-[1px] border-border p-6 lg:sticky top-28"
         >
           <img
-            src="/images/user7.png"
+            src="/images/user1.png"
             alt="setting"
-            className="w-40 h-40 rounded-full object-cover border border-dashed border-subMain"
+            className="w-40 h-40 rounded-full object-cover "
           />
           <div className="gap-2 flex-colo">
             <h2 className="text-sm font-semibold">{patient ? `${patient.first_name} ${patient.last_name}` : 'Patient Name'}</h2>
