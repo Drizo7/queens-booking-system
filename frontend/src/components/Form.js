@@ -57,7 +57,7 @@ export function MenuSelect({ children, datas, item: data }) {
     <div className="text-sm w-full relative">
       <Menu>
         <Menu.Button>{children}</Menu.Button>
-        <Menu.Items className="flex flex-col z-50 gap-4 absolute left-0  bg-white rounded-md shadow-lg py-4 px-6 ring-1 ring-border focus:outline-none">
+        <Menu.Items className="flex flex-col z-50 gap-4 absolute right-0 bg-white rounded-md shadow-lg py-4 px-6 ring-1 ring-border focus:outline-none">
           {datas.map((item, index) => (
             <button
               onClick={() => item.onClick(data)}
@@ -88,7 +88,7 @@ export function Select({ children, selectedPerson, setSelectedPerson, datas, dis
             {children}
           </Listbox.Button>
           {!disabled && (
-            <Listbox.Options className="flex flex-col gap-4 top-10 z-50 absolute left-0 w-full bg-white rounded-md shadow-lg py-4 px-6 ring-1 ring-border focus:outline-none">
+            <Listbox.Options className="flex flex-col gap-4 top-10 z-50 absolute right-0 w-full bg-white rounded-md shadow-lg py-4 px-6 ring-1 ring-border focus:outline-none">
               {datas.map((person) => (
                 <Listbox.Option
                   className={`cursor-pointer text-xs hover:text-subMain`}

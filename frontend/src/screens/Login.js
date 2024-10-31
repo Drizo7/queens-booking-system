@@ -67,6 +67,15 @@ function Login() {
         >
           Register
         </button>
+
+        {/* Forgot Password Link */}
+        <button
+          type="button"
+          className="mt-2 text-blue-600 underline"
+          onClick={() => navigate('/password-reset')}
+        >
+          Forgot Password?
+        </button>
       </form>
     </div>
   );

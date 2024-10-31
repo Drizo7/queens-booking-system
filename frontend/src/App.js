@@ -30,6 +30,7 @@ import NewMedicalRecode from './screens/Patients/NewMedicalRecode';
 import NotFound from './screens/NotFound';
 import Login from './screens/Login';
 import Register from './screens/Register';
+import ResetPage from './screens/ResetPage';
 
 function App() {
   Aos.init();
@@ -88,6 +89,7 @@ const LoaderWrapper = () => {
         {/* others */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/password-reset" element={<ResetPage />} />
         <Route path="/appointments" element={<Appointments />} />
         <Route path="/campaigns" element={<Campaings />} />
         <Route path="/medicine" element={<Medicine />} />

@@ -1,3 +1,4 @@
+const bcrypt = require('bcrypt');
 // backend/models/user.js
 module.exports = (sequelize, DataTypes) => {
   // Define the User model
@@ -29,11 +30,43 @@ module.exports = (sequelize, DataTypes) => {
     role: {
       type: DataTypes.STRING,
       allowNull: false, // Role cannot be empty
-      defaultValue: 'patient', // Default role is 'patient' (can be 'doctor', 'receptionist', etc.)
+      defaultValue: 'receptionist', // Default role is 'patient' (can be 'doctor', 'receptionist', etc.)
+    },
+   // Security questions and answers
+    security_question_1: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    security_answer_1: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    security_question_2: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    security_answer_2: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    security_question_3: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    security_answer_3: {
+      type: DataTypes.STRING,
+      allowNull: false,
     },
   }, {
     paranoid: true,
     timestamps: true, // Automatically adds 'createdAt' and 'updatedAt' fields
+  });
+
+  // Hook to hash answers before saving
+  User.beforeCreate(async (user) => {
+    user.security_answer_1 = await bcrypt.hash(user.security_answer_1, 10);
+    user.security_answer_2 = await bcrypt.hash(user.security_answer_2, 10);
+    user.security_answer_3 = await bcrypt.hash(user.security_answer_3, 10);
   });
 
   User.associate = (models) => {

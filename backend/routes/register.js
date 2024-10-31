@@ -4,7 +4,13 @@ const { User, Receptionist } = require('../models'); // Adjust based on your mod
 const router = express.Router();
 
 router.post('/register', async (req, res) => {
-  const { first_name, last_name, email, phone_number, password, role } = req.body;
+  const { first_name, last_name, email, phone_number, password, role, 
+    security_question_1,
+    security_answer_1,
+    security_question_2,
+    security_answer_2,
+    security_question_3,
+    security_answer_3, } = req.body;
 
   try {
     // Check if the email already exists
@@ -24,6 +30,12 @@ router.post('/register', async (req, res) => {
       phone_number,
       password: hashedPassword,
       role: 'receptionist', // Set role as 'receptionist'
+      security_question_1,
+      security_answer_1: await bcrypt.hash(security_answer_1, 10),
+      security_question_2,
+      security_answer_2: await bcrypt.hash(security_answer_2, 10),
+      security_question_3,
+      security_answer_3: await bcrypt.hash(security_answer_3, 10),
     });
 
      // Add receptionist-specific data

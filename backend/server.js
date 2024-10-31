@@ -12,6 +12,7 @@ const receptionistRoutes = require('./routes/receptionist');
 const clinicRoutes = require('./routes/clinic');
 const doctorRoutes = require('./routes/doctor');
 const appointmentRoutes = require('./routes/appointment');
+const resetRoutes = require('./routes/reset');
 const { errorHandler } = require('./utils/errorHandler');
 
 const app = express();
@@ -30,6 +31,7 @@ app.use('/api', receptionistRoutes);
 app.use('/api', doctorRoutes);
 app.use('/api', clinicRoutes);
 app.use('/api', appointmentRoutes);
+app.use('/api', resetRoutes);
 
 // Error Handling
 app.use(errorHandler);
