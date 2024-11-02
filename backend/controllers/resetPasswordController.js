@@ -3,6 +3,7 @@
 
 const { User } = require('../models');
 const bcrypt = require('bcrypt');
+const { generateToken, comparePassword } = require('../utils/auth');
 
 // Verify security answers and reset password
 exports.verifySecurityAnswers = async (req, res) => { 
@@ -22,9 +23,9 @@ exports.verifySecurityAnswers = async (req, res) => {
     
     // Check answers for at least 2 out of 3 matches
     const comparisonResults = {
-      answer1: await bcrypt.compare(user.security_answer_1, answer1),
-      answer2: await bcrypt.compare(answer2, user.security_answer_2),
-      answer3: await bcrypt.compare(answer3, user.security_answer_3),
+      result1: await comparePassword(answer1, user.security_answer_1),
+      result2: await comparePassword(answer2, user.security_answer_2),
+      result3: await comparePassword(answer3, user.security_answer_3),
     };
 
     console.log('Comparison results:', comparisonResults);

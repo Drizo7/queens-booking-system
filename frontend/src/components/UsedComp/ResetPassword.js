@@ -24,7 +24,7 @@ const ResetPassword = ({ email }) => {
         newPassword,
       });
 
-        toast.message(response.data.message);
+        toast.success(response.data.message);
       //setMessage(response.data.message);
     } catch (error) {
         toast.error('An error occurred : ' + error.response.data.message);
@@ -36,10 +36,12 @@ const ResetPassword = ({ email }) => {
     <div className="flex-colo gap-4">
       <h2>Reset Password</h2>
       <form onSubmit={handleSubmit}>
+        
         <Input
           type="password"
           placeholder="New Password"
           value={newPassword}
+          color={true}
           onChange={(e) => setNewPassword(e.target.value)}
           required
         />
@@ -47,10 +49,13 @@ const ResetPassword = ({ email }) => {
           type="password"
           placeholder="Confirm New Password"
           value={confirmPassword}
+          color={true}
           onChange={(e) => setConfirmPassword(e.target.value)}
           required
         />
-        <Button type="submit" Reset Password />
+        <div className='mt-4'>
+        <Button label="Reset Password" />
+        </div>
       </form>
       {/* {message && <p>{message}</p>} */}
     </div>

@@ -22,6 +22,10 @@ router.post('/register', async (req, res) => {
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    const securityanswer1 = await bcrypt.hash(security_answer_1, 10);
+    const securityanswer2 = await bcrypt.hash(security_answer_2, 10);
+    const securityanswer3 = await bcrypt.hash(security_answer_3, 10);
+
     // Create a new user
     const newUser = await User.create({
       first_name,
@@ -31,11 +35,11 @@ router.post('/register', async (req, res) => {
       password: hashedPassword,
       role: 'receptionist', // Set role as 'receptionist'
       security_question_1,
-      security_answer_1: await bcrypt.hash(security_answer_1, 10),
+      security_answer_1: securityanswer1,
       security_question_2,
-      security_answer_2: await bcrypt.hash(security_answer_2, 10),
+      security_answer_2: securityanswer2,
       security_question_3,
-      security_answer_3: await bcrypt.hash(security_answer_3, 10),
+      security_answer_3: securityanswer3,
     });
 
      // Add receptionist-specific data

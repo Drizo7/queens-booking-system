@@ -47,7 +47,7 @@ function Register() {
         security_answer_3: securityAnswer3,
       });
 
-      toast.error('Registration succesful');
+      toast.success('Registration succesful');
       navigate('/login');
     } catch (err) {
       toast.error('Registration failed : ' + err);

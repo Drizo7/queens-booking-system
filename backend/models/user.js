@@ -62,13 +62,6 @@ module.exports = (sequelize, DataTypes) => {
     timestamps: true, // Automatically adds 'createdAt' and 'updatedAt' fields
   });
 
-  // Hook to hash answers before saving
-  User.beforeCreate(async (user) => {
-    user.security_answer_1 = await bcrypt.hash(user.security_answer_1, 10);
-    user.security_answer_2 = await bcrypt.hash(user.security_answer_2, 10);
-    user.security_answer_3 = await bcrypt.hash(user.security_answer_3, 10);
-  });
-
   User.associate = (models) => {
     // Define the association after all models are available
     User.hasOne(models.Receptionist, { as: 'receptionistDetails', foreignKey: 'user_id' });

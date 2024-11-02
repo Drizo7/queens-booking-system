@@ -93,7 +93,7 @@ function Header() {
               {greeting.icon}
               <span className="ml-4 text-2xl font-bold text-gray-800 hidden sm:inline">{greeting.message}</span>
             <p className="ml-3 text-xl text-gray-600 font-small hidden sm:inline">
-              {`${userData.first_name} ${userData.last_name}`}
+              {`${userData.first_name} `}
             </p>
           </div>
           {/* search */}

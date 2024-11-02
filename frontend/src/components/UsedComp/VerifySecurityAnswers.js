@@ -23,10 +23,11 @@ const VerifySecurityAnswers = ({ onVerificationSuccess }) => {
       });
 
       //setMessage(response.data.message);
-      toast.message(response.data.message);
+      toast.success(response.data.message);
       if (response.status === 200) onVerificationSuccess(email);
     } catch (error) {
-        toast.error('An error occurred : ' + error.response.data.message);
+      const errorMessage = error.response?.data?.message || 'An error occurred';
+        toast.error('An error occurred : ' + errorMessage);
       //setMessage(error.response.data.message || 'An error occurred');
     }
   };
