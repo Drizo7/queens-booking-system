@@ -64,7 +64,7 @@ npm start
 - Electron
 - React
 - Tailwind Css
-- Node.Js
+- Express & Node.js
 - Sqlite
 
 ## Contributing
